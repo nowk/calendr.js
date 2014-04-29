@@ -42,7 +42,7 @@ var Calendr = module.exports = function(date) {
 
 
 /*
- * array grid of calendar month
+ * property alias for #slice
  *
  * @return {Array}
  * @api public
