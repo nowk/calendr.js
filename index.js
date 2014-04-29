@@ -28,19 +28,16 @@ var days = [
  * @constructor
  */
 
-var Calendr = module.exports = function(date) {
-  var d = this.d = moment(date); // keep reference to original date used to build
-
-  var day = this.day = d.date();
-  var month = this.month = d.month()+1;
-  var year = this.year = d.year();
-  var numofdays = this.numofdays = d.daysInMonth();
-
-  this.monthstartson = moment(year+'-'+month, 'YYYY-MM').day();
-  this.monthendson = moment(year+'-'+month+'-'+numofdays, 'YYYY-MM-DD').day();
-
-  this.previousmonth = moment(d.subtract('month', 1));
-  this.nextmonth = moment(d.add('month', 1));
+var Calendr = module.exports = function(d) {
+  this.d = moment(d); // keep reference to original date used to build
+  this.date = this.d.date();
+  this.month = this.d.month()+1;
+  this.year = this.d.year();
+  this.numofdays = this.d.daysInMonth();
+  this.monthstartson = moment(this.year+'-'+this.month, 'YYYY-MM').day();
+  this.monthendson = moment(this.year+'-'+this.month+'-'+this.numofdays, 'YYYY-MM-DD').day();
+  this.previousmonth = moment(this.d.subtract('month', 1));
+  this.nextmonth = moment(this.d.add('month', 1));
 };
 
 
