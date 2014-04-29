@@ -38,6 +38,9 @@ var Calendr = module.exports = function(date) {
 
   this.monthstartson = moment(year+'-'+month, 'YYYY-MM').day();
   this.monthendson = moment(year+'-'+month+'-'+numofdays, 'YYYY-MM-DD').day();
+
+  this.previousmonth = moment(d.subtract('month', 1));
+  this.nextmonth = moment(d.add('month', 1));
 };
 
 
@@ -62,7 +65,7 @@ Calendr.prototype.__defineGetter__('grid', function() {
 
 Calendr.prototype.slice = function() {
   var days = calendardays.call(this);
-  prepad(days, this.monthstartson);
+  prepad.call(this, days);
 
   var numofweeks = Math.ceil(days.length / 7);
   var weeks = Array.apply(null, Array(numofweeks)).map(function(o, i) {
@@ -101,10 +104,12 @@ function calendardays() {
  * @api private
  */
 
-function prepad(days, index) {
+function prepad(days) {
+  var numofdayslastmonth = this.previousmonth.daysInMonth();
   var i = 0;
+  var index = this.monthstartson;
   for(; i<index; i++) {
-    days.splice(0, 0, null);
+    days.splice(0, 0, (numofdayslastmonth-i));
   }
 }
 
@@ -117,8 +122,10 @@ function prepad(days, index) {
  */
 
 function fill(week) {
-  for(var i=week.length; i<7; i++) {
-    week.push(null);
+  var i = 0;
+  var len = 7-week.length;
+  for(; i<len; i++) {
+    week.push(i+1);
   }
 }
 
