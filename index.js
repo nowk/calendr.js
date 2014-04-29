@@ -22,7 +22,7 @@ var days = [
 
 
 /*
- * Calendar
+ * Calendr
  *
  * @param {Date} date
  * @constructor
