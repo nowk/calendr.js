@@ -29,11 +29,12 @@ var days = [
  */
 
 var Calendr = module.exports = function(date) {
-  var today = this.date = moment(date);
-  var day = this.day = today.date();
-  var month = this.month = today.month()+1;
-  var year = this.year = today.year();
-  var numofdays = this.numofdays = today.daysInMonth();
+  var d = this.d = moment(date); // keep reference to original date used to build
+
+  var day = this.day = d.date();
+  var month = this.month = d.month()+1;
+  var year = this.year = d.year();
+  var numofdays = this.numofdays = d.daysInMonth();
 
   this.monthstartson = moment(year+'-'+month, 'YYYY-MM').day();
   this.monthendson = moment(year+'-'+month+'-'+numofdays, 'YYYY-MM-DD').day();
