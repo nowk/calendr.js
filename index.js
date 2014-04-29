@@ -1,17 +1,20 @@
 ;(function() {
+  var moment;
 
   /*
    * expose Calendr
    */
 
   if ('undefined' !== typeof module && 'undefined' !== typeof module.exports) {
-    var moment = require('moment');
+    moment = require('moment');
 
     module.exports = Calendr;
   } else {
     if (!('moment' in window)) {
       return console.error('Moment.js is required');
     }
+    moment = window.moment;
+
     window.Calendr = Calendr;
   }
 
@@ -112,6 +115,8 @@
    */
 
   function prepad(days) {
+    /* jshint validthis: true */
+
     var numofdayslastmonth = this.previousmonth.daysInMonth();
     var i = 0;
     var index = this.monthstartson;
@@ -137,3 +142,4 @@
   }
 
 })();
+
