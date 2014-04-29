@@ -1,0 +1,32 @@
+{
+  "name": "calendr",
+  "version": "0.0.1",
+  "description": "Calendar grid generator",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "moment": "^2.6.0"
+  },
+  "devDependencies": {
+    "chai": "^1.9.1"
+  },
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:nowk/calendr.js.git"
+  },
+  "keywords": [
+    "calendar",
+    "grid"
+  ],
+  "author": "Yung Hwa Kwon <yung.kwon@damncarousel.com> (http://damncarousel.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nowk/calendr.js/issues"
+  },
+  "homepage": "https://github.com/nowk/calendr.js"
+}
