@@ -4,7 +4,6 @@
  */
 
 var moment = require('moment');
-var util = require('util');
 
 
 /*
