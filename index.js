@@ -140,6 +140,7 @@
     var self = this;
     var month = self.moment;
     var days = Array.apply(null, Array(self.numofdays));
+
     return days.map(function(d, i) {
       return day.call(self, (i+1), month);
     });
@@ -157,6 +158,7 @@
     var self = this;
     var month = self.prevmonth;
     var numofdayslastmonth = month.daysInMonth();
+
     var i = 0;
     var index = self.startson;
     for(; i<index; i++) {
@@ -175,6 +177,7 @@
   function fill(week) {
     var self = this;
     var month = self.nextmonth;
+
     var i = 0;
     var len = 7-week.length;
     for(; i<len; i++) {
