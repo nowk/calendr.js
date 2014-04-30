@@ -49,8 +49,10 @@
     this.numofdays = this.d.daysInMonth();
     this.monthstartson = moment(this.year+'-'+this.month, 'YYYY-MM').day();
     this.monthendson = moment(this.year+'-'+this.month+'-'+this.numofdays, 'YYYY-MM-DD').day();
-    this.previousmonth = moment(this.d.subtract('month', 1));
-    this.nextmonth = moment(this.d.add('month', 1));
+    this.previousmonth = moment(new Date(this.d)).subtract('month', 1);
+    this.nextmonth = moment(new Date(this.d)).add('month', 1);
+
+    this.dayObjects = false;
   }
 
 
@@ -84,7 +86,7 @@
       return days.slice(b, e);
     });
 
-    fill(weeks[numofweeks-1]);
+    fill.call(this, weeks[numofweeks-1]);
 
     return weeks;
   };
@@ -98,9 +100,12 @@
    */
 
   function calendardays() {
+    var self = this;
+    var month = self.d;
     var days = Array.apply(null, Array(this.numofdays));
     return days.map(function(d, i) {
-      return i+1;
+      var n = i+1;
+      return day.call(self, n, month);
     });
   }
 
@@ -115,13 +120,14 @@
    */
 
   function prepad(days) {
-    /* jshint validthis: true */
-
-    var numofdayslastmonth = this.previousmonth.daysInMonth();
+    var self = this;
+    var month = self.previousmonth;
+    var numofdayslastmonth = month.daysInMonth();
     var i = 0;
-    var index = this.monthstartson;
+    var index = self.monthstartson;
     for(; i<index; i++) {
-      days.splice(0, 0, (numofdayslastmonth-i));
+      var n = numofdayslastmonth-i;
+      days.splice(0, 0, day.call(self, n, month));
     }
   }
 
@@ -134,10 +140,43 @@
    */
 
   function fill(week) {
+    var self = this;
+    var month = self.nextmonth;
     var i = 0;
     var len = 7-week.length;
     for(; i<len; i++) {
-      week.push(i+1);
+      var n = i+1;
+      week.push(day.call(self, n, month));
+    }
+  }
+
+
+  /*
+   * Day object
+   *
+   * @constructor
+   */
+
+  function Day(date, month, year) {
+    this.date = date;
+    this.month = month;
+    this.year = year;
+  }
+
+
+  /*
+   * return day object or numer
+   *
+   * @param {Number} date
+   * @param {Moment} moment
+   * @return {Day|Number}
+   */
+
+  function day(date, moment) {
+    if (this.dayObjects) {
+      return new Day(date, moment.month()+1, moment.year());
+    } else {
+      return date;
     }
   }
 
