@@ -63,8 +63,8 @@
 
   function Calendr(date) {
     this._date = date;
+    this.moment = moment(this._date);
     this.dayObjects = false;
-
     this.build();
   }
 
@@ -77,8 +77,6 @@
    */
 
   Calendr.prototype.build = function() {
-    this.moment = moment(this._date);
-
     this.year = this.moment.year();
     this.month = this.moment.month()+1; // month is 0 indexed
     this.monthInEnglish = months[this.month-1];
@@ -128,6 +126,30 @@
     fill.call(this, weeks[numofweeks-1]);
 
     return weeks;
+  };
+
+
+  /*
+   * move forward one month
+   *
+   * @api public
+   */
+
+  Calendr.prototype.goForwardMonth = function() {
+    this.moment.add('month', 1);
+    this.build();
+  };
+
+
+  /*
+   * move back one month
+   *
+   * @api public
+   */
+
+  Calendr.prototype.goBackMonth = function() {
+    this.moment.subtract('month', 1);
+    this.build();
   };
 
 
