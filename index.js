@@ -35,6 +35,26 @@
 
 
   /*
+   * months in english
+   */
+
+  var months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'Decemmber'
+  ];
+
+
+  /*
    * Calendr
    *
    * @param {Date} origin
@@ -61,6 +81,8 @@
 
     this.month = this.moment.month()+1; // month is 0 indexed
     this.year = this.moment.year();
+
+    this.monthInEnglish = months[this.month-1];
 
     this.numofdays = this.moment.daysInMonth();
     this.startson = moment(this.year+'-'+this.month, 'YYYY-MM').day();

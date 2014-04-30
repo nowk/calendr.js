@@ -46,6 +46,14 @@ describe("Calendr", function() {
     ]);
   });
 
+  it("returns the month name in english", function() {
+    var aprilcal = new Calendr(new Date(2014, 3));
+    var maycal = new Calendr(new Date(2014, 4));
+
+    assert.equal(aprilcal.monthInEnglish, 'April');
+    assert.equal(maycal.monthInEnglish, 'May');
+  });
+
 
   /*
    * day object
