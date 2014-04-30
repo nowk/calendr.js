@@ -113,7 +113,6 @@
    * pad days so 1st day starts on same index of day of the week
    *
    * @param {Array} days
-   * @return {Array}
    * @api private
    */
 
