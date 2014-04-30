@@ -79,9 +79,8 @@
   Calendr.prototype.build = function() {
     this.moment = moment(this._date);
 
-    this.month = this.moment.month()+1; // month is 0 indexed
     this.year = this.moment.year();
-
+    this.month = this.moment.month()+1; // month is 0 indexed
     this.monthInEnglish = months[this.month-1];
 
     this.numofdays = this.moment.daysInMonth();
@@ -90,6 +89,9 @@
 
     this.prevmonth = moment(new Date(this.moment)).subtract('month', 1);
     this.nextmonth = moment(new Date(this.moment)).add('month', 1);
+
+    this.prevmonthInEnglish = months[this.prevmonth.month()];
+    this.nextmonthInEnglish = months[this.nextmonth.month()];
   };
 
 

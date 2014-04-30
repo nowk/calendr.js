@@ -52,6 +52,9 @@ describe("Calendr", function() {
 
     assert.equal(aprilcal.monthInEnglish, 'April');
     assert.equal(maycal.monthInEnglish, 'May');
+
+    assert.equal(maycal.prevmonthInEnglish, 'April');
+    assert.equal(maycal.nextmonthInEnglish, 'June');
   });
 
 
