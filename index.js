@@ -61,10 +61,15 @@
    * @constructor
    */
 
-  function Calendr(date) {
+  function Calendr(date, opts) {
+    if ('undefined' === typeof opts) {
+      opts = {};
+    }
+
     this._date = date;
     this.moment = moment(this._date);
     this.dayObjects = false;
+    this.auto = opts.auto || false;
     this.build();
   }
 
@@ -89,6 +94,22 @@
 
     this.prevmonthInEnglish = months[this.prevmonth.month()];
     this.nextmonthInEnglish = months[this.nextmonth.month()];
+
+    if (this.auto) {
+      this._autogrid = this.slice();
+    }
+  };
+
+
+  /*
+   * returns the _autogrid property
+   *
+   * @return {Array}
+   * @api private
+   */
+
+  Calendr.prototype._grid = function() {
+    return this._autogrid;
   };
 
 
@@ -100,7 +121,7 @@
    */
 
   Calendr.prototype.__defineGetter__('grid', function() {
-    return this.slice();
+    return this.auto ? this._grid() : this.slice();
   });
 
 

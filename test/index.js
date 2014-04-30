@@ -1,6 +1,7 @@
 /* jshint node: true */
 
 var assert = require('chai').assert;
+var sinon = require('sinon');
 var Calendr = require('..');
 
 
@@ -88,6 +89,17 @@ describe("Calendr", function() {
       [20,  21,  22,  23,  24,  25,  26],
       [27,  28,  29,  30,  1,   2,   3]
     ]);
+  });
+
+  it("can auto grid", function() {
+    var s = sinon.mock(Calendr.prototype).expects('_grid');
+
+    var may = new Date(2014, 04);
+    var maycal = new Calendr(may, {auto: true});
+    var grid = maycal.grid;
+
+    s.verify();
+    Calendr.prototype._grid.restore();
   });
 
 
