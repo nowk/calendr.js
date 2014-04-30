@@ -114,7 +114,6 @@
    * pad days so 1st day starts on same index of day of the week
    *
    * @param {Array} days
-   * @param {Number} index
    * @return {Array}
    * @api private
    */
@@ -170,6 +169,7 @@
    * @param {Number} date
    * @param {Moment} moment
    * @return {Day|Number}
+   * @api private
    */
 
   function day(date, moment) {
