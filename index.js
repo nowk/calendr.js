@@ -68,7 +68,7 @@
 
     this._date = date;
     this.moment = moment(this._date);
-    this.dayObjects = false;
+    this.dayObjects = opts.dayObjects || false;
     this.auto = opts.auto || false;
     this.build();
   }
