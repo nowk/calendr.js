@@ -50,7 +50,7 @@
     'September',
     'October',
     'November',
-    'Decemmber'
+    'December'
   ];
 
 
