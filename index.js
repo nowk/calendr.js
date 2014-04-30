@@ -104,8 +104,7 @@
     var month = self.d;
     var days = Array.apply(null, Array(this.numofdays));
     return days.map(function(d, i) {
-      var n = i+1;
-      return day.call(self, n, month);
+      return day.call(self, (i+1), month);
     });
   }
 
@@ -125,8 +124,7 @@
     var i = 0;
     var index = self.monthstartson;
     for(; i<index; i++) {
-      var n = numofdayslastmonth-i;
-      days.splice(0, 0, day.call(self, n, month));
+      days.splice(0, 0, day.call(self, (numofdayslastmonth-i), month));
     }
   }
 
@@ -144,8 +142,7 @@
     var i = 0;
     var len = 7-week.length;
     for(; i<len; i++) {
-      var n = i+1;
-      week.push(day.call(self, n, month));
+      week.push(day.call(self, (i+1), month));
     }
   }
 
