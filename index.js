@@ -72,7 +72,6 @@
   /*
    * build calendar properties
    *
-   * @param {Date} date
    * @api public
    */
 
