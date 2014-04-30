@@ -41,19 +41,34 @@
    * @constructor
    */
 
-  function Calendr(origin) {
-    this.d = moment(origin); // keep reference to original date used to build
-    this.date = this.d.date();
-    this.month = this.d.month()+1;
-    this.year = this.d.year();
-    this.numofdays = this.d.daysInMonth();
-    this.monthstartson = moment(this.year+'-'+this.month, 'YYYY-MM').day();
-    this.monthendson = moment(this.year+'-'+this.month+'-'+this.numofdays, 'YYYY-MM-DD').day();
-    this.previousmonth = moment(new Date(this.d)).subtract('month', 1);
-    this.nextmonth = moment(new Date(this.d)).add('month', 1);
-
+  function Calendr(date) {
+    this._date = date;
     this.dayObjects = false;
+
+    this.build();
   }
+
+
+  /*
+   * build calendar properties
+   *
+   * @param {Date} date
+   * @api public
+   */
+
+  Calendr.prototype.build = function() {
+    this.moment = moment(this._date);
+
+    this.month = this.moment.month()+1; // month is 0 indexed
+    this.year = this.moment.year();
+
+    this.numofdays = this.moment.daysInMonth();
+    this.startson = moment(this.year+'-'+this.month, 'YYYY-MM').day();
+    this.endson = moment(this.year+'-'+this.month+'-'+this.numofdays, 'YYYY-MM-DD').day();
+
+    this.prevmonth = moment(new Date(this.moment)).subtract('month', 1);
+    this.nextmonth = moment(new Date(this.moment)).add('month', 1);
+  };
 
 
   /*
@@ -101,8 +116,8 @@
 
   function calendardays() {
     var self = this;
-    var month = self.d;
-    var days = Array.apply(null, Array(this.numofdays));
+    var month = self.moment;
+    var days = Array.apply(null, Array(self.numofdays));
     return days.map(function(d, i) {
       return day.call(self, (i+1), month);
     });
@@ -118,10 +133,10 @@
 
   function prepad(days) {
     var self = this;
-    var month = self.previousmonth;
+    var month = self.prevmonth;
     var numofdayslastmonth = month.daysInMonth();
     var i = 0;
-    var index = self.monthstartson;
+    var index = self.startson;
     for(; i<index; i++) {
       days.splice(0, 0, day.call(self, (numofdayslastmonth-i), month));
     }
