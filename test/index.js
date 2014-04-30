@@ -92,14 +92,13 @@ describe("Calendr", function() {
   });
 
   it("can auto grid", function() {
-    var s = sinon.mock(Calendr.prototype).expects('_grid');
+    var s = sinon.mock(Calendr.prototype).expects('slice');
 
     var may = new Date(2014, 04);
     var maycal = new Calendr(may, {auto: true});
-    var grid = maycal.grid;
 
     s.verify();
-    Calendr.prototype._grid.restore();
+    Calendr.prototype.slice.restore();
   });
 
 

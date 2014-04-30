@@ -96,20 +96,10 @@
     this.nextmonthInEnglish = months[this.nextmonth.month()];
 
     if (this.auto) {
-      this._autogrid = this.slice();
+      this._grid = this.slice();
+    } else {
+      delete this._grid; // remove the defined _grid on each build; re-set on next grid call
     }
-  };
-
-
-  /*
-   * returns the _autogrid property
-   *
-   * @return {Array}
-   * @api private
-   */
-
-  Calendr.prototype._grid = function() {
-    return this._autogrid;
   };
 
 
@@ -121,7 +111,7 @@
    */
 
   Calendr.prototype.__defineGetter__('grid', function() {
-    return this.auto ? this._grid() : this.slice();
+    return this._grid || (this._grid = this.slice());
   });
 
 
