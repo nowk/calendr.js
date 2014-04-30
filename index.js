@@ -37,12 +37,12 @@
   /*
    * Calendr
    *
-   * @param {Date} date
+   * @param {Date} origin
    * @constructor
    */
 
-  function Calendr(d) {
-    this.d = moment(d); // keep reference to original date used to build
+  function Calendr(origin) {
+    this.d = moment(origin); // keep reference to original date used to build
     this.date = this.d.date();
     this.month = this.d.month()+1;
     this.year = this.d.year();
