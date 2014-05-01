@@ -104,6 +104,21 @@ describe("Calendr", function() {
     Calendr.prototype.slice.restore();
   });
 
+  it("caches the subsequent calls to grid", function() {
+    var s = sinon.mock(Calendr.prototype)
+      .expects('slice')
+      .once()
+      .returns([[1, 2, 3], [4, 5, 6]]);
+
+    var may = new Date(2014, 04);
+    var maycal = new Calendr(may);
+    assert.deepEqual(maycal.grid, [[1, 2, 3], [4, 5, 6]]);
+    assert.deepEqual(maycal.grid, [[1, 2, 3], [4, 5, 6]]);
+
+    s.verify();
+    Calendr.prototype.slice.restore();
+  });
+
 
   /*
    * day object
