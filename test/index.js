@@ -92,7 +92,10 @@ describe("Calendr", function() {
   });
 
   it("can auto grid", function() {
-    var s = sinon.mock(Calendr.prototype).expects('slice');
+    var s = sinon.mock(Calendr.prototype)
+      .expects('slice')
+      .once()
+      .returns([[1, 2, 3], [4, 5, 6]]);
 
     var may = new Date(2014, 04);
     var maycal = new Calendr(may, {auto: true});
