@@ -164,6 +164,31 @@
 
 
   /*
+   * return today
+   *
+   * @return {Day|Number}
+   * @api public
+   */
+
+  Calendr.prototype.__defineGetter__('today', function() {
+    var t = new Date();
+    if (this.month !== t.getMonth()+1 || this.year !== t.getFullYear()) {
+      return;
+    }
+
+    var flat = [].concat.apply([], this.grid);
+    var len = flat.length;
+    var i = t.getDate()-1; // start from today, TODO save pad length so we can lookup via index without looping
+    for(; i<len; i++) {
+      var d = flat[i];
+      if (d.isToday || d == t.getDate()) {
+        return d;
+      }
+    }
+  });
+
+
+  /*
    * create an array of calendar days
    *
    * @return {Array}
@@ -231,6 +256,19 @@
     this.month = month;
     this.year = year;
   }
+
+
+  /*
+   * is it today?
+   *
+   * @return {Boolean}
+   * @api public
+   */
+
+  Day.prototype.__defineGetter__('isToday', function() {
+    var t = new Date();
+    return this.date == t.getDate() && this.month == (t.getMonth()+1) && this.year == t.getFullYear();
+  });
 
 
   /*

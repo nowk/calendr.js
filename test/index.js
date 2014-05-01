@@ -29,6 +29,9 @@ describe("Calendr", function() {
   });
 
   it("returns days in grid as objects", function() {
+    var now = new Date(2014, 3, 21);
+    var clock = sinon.useFakeTimers(now.getTime());
+
     var a = dayMock(2014, 3);
     var b = dayMock(2014, 4);
     var c = dayMock(2014, 5);
@@ -45,6 +48,8 @@ describe("Calendr", function() {
       [b(20),  b(21),  b(22),  b(23),  b(24),  b(25),  b(26)],
       [b(27),  b(28),  b(29),  b(30),  c(1),   c(2),   c(3)]
     ]);
+
+    clock.restore();
   });
 
   it("returns the month name in english", function() {
@@ -119,6 +124,27 @@ describe("Calendr", function() {
     Calendr.prototype.slice.restore();
   });
 
+  it("today's day isToday is true", function() {
+    var now = new Date(2014, 3, 21);
+    var clock = sinon.useFakeTimers(now.getTime());
+    var day = dayMock(2014, 4);
+
+    var april = new Date(2014, 3);
+    var may = new Date(2014, 4);
+    var aprilcal = new Calendr(april, {auto: true, dayObjects: true});
+    var maycal = new Calendr(may, {auto: true, dayObjects: true});
+    assert.deepEqual(aprilcal.today, day(21));
+    assert.isUndefined(maycal.today);
+
+    var aprilcalNoDayObj = new Calendr(april);
+    assert.equal(aprilcalNoDayObj.today, 21);
+
+    var april2015 = new Calendr(new Date(2015, 3));
+    assert.isUndefined(april2015.today);
+
+    clock.restore();
+  });
+
 
   /*
    * day object
@@ -134,6 +160,12 @@ describe("Calendr", function() {
     this.month = month;
     this.year = year;
   }
+
+  Day.prototype.__defineGetter__('isToday', function() {
+    var t = new Date();
+    return this.date == t.getDate() && this.month == (t.getMonth()+1) && this.year == t.getFullYear();
+  });
+
 
 
   /*
