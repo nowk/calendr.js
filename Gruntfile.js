@@ -4,8 +4,12 @@ module.exports = function(grunt) {
     uglify: {
       dist: {
         options: {
-          banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-            '<%= grunt.template.today("yyyy-mm-dd") %> */' + "\n"
+          banner:
+            '/*' + "\n" +
+            ' * <%= pkg.name %> - v<%= pkg.version %>' + "\n" +
+            ' * <%= grunt.template.today("yyyy-mm-dd") %>' + "\n" +
+            ' * License: MIT' + "\n" +
+            ' */' + "\n"
         },
         files:{
           'dist/calendr.min.js': ['./index.js']
