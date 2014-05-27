@@ -8,7 +8,7 @@
   if ('undefined' !== typeof module && 'undefined' !== typeof module.exports) {
     moment = require('moment');
 
-    module.exports = Calendr;
+    exports = module.exports = Calendr;
   } else {
     if (!('moment' in window)) {
       return console.error('Moment.js is required');
@@ -172,7 +172,7 @@
     var i = t.getDate()-1; // start from today, TODO save pad length so we can lookup via index without looping
     for(; i<len; i++) {
       var d = flat[i];
-      if (d.isToday || d == t.getDate()) {
+      if (d == t.getDate() || (d instanceof Day && d.isToday())) {
         return d;
       }
     }
@@ -234,16 +234,85 @@
 
 
   /*
+   * expose Day
+   */
+
+  exports.Day = Day;
+
+  /*
    * Day object
    *
    * @constructor
    */
 
-  function Day(date, month, year) {
-    this.date = date;
-    this.month = month;
-    this.year = year;
+  function Day(year, month, date) {
+    this._toDate = new Date(year, month-1, date);
   }
+
+  /*
+   * toDate
+   *
+   * @return {Date}
+   */
+
+  Day.prototype.toDate = function() {
+    return this._toDate;
+  };
+
+  /*
+   * date
+   *
+   * @return {Number}
+   * @api public
+   */
+
+  Day.prototype.__defineGetter__('date', function() {
+    return this._toDate.getDate();
+  });
+
+  /*
+   * month
+   *
+   * @return {Number}
+   * @api public
+   */
+
+  Day.prototype.__defineGetter__('month', function() {
+    return this._toDate.getMonth()+1; // 1 indexed
+  });
+
+  /*
+   * year
+   *
+   * @return {Number}
+   * @api public
+   */
+
+  Day.prototype.__defineGetter__('year', function() {
+    return this._toDate.getFullYear();
+  });
+
+  /*
+   * day of the week (Monday, Tuesday, etc...)
+   *
+   * @return {String}
+   * @api public
+   */
+
+  Day.prototype.dayOfWeek = function() {
+    return days[moment(this._toDate).day()];
+  };
+
+  /*
+   * month name
+   *
+   * @return {String}
+   * @api public
+   */
+
+  Day.prototype.nameOfMonth = function() {
+    return months[this.month-1];
+  };
 
   /*
    * is it today?
@@ -252,10 +321,11 @@
    * @api public
    */
 
-  Day.prototype.__defineGetter__('isToday', function() {
-    var t = new Date();
-    return this.date == t.getDate() && this.month == (t.getMonth()+1) && this.year == t.getFullYear();
-  });
+  Day.prototype.isToday = function() {
+    var now = new Date();
+    return this._toDate.getTime() ===
+      new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  };
 
   /*
    * return day object or numer
@@ -268,7 +338,7 @@
 
   function day(date, moment) {
     if (this.dayObjects) {
-      return new Day(date, moment.month()+1, moment.year());
+      return new Day(moment.year(), moment.month()+1, date);
     } else {
       return date;
     }

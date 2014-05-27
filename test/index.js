@@ -3,6 +3,7 @@
 var assert = require('chai').assert;
 var sinon = require('sinon');
 var Calendr = require('..');
+var Day = Calendr.Day;
 
 
 describe("Calendr", function() {
@@ -145,29 +146,6 @@ describe("Calendr", function() {
     clock.restore();
   });
 
-
-  /*
-   * day object
-   *
-   * @param {Number} date
-   * @param {Number} month
-   * @param {Number} year
-   * @constructor
-   */
-
-  function Day(date, month, year) {
-    this.date = date;
-    this.month = month;
-    this.year = year;
-  }
-
-  Day.prototype.__defineGetter__('isToday', function() {
-    var t = new Date();
-    return this.date == t.getDate() && this.month == (t.getMonth()+1) && this.year == t.getFullYear();
-  });
-
-
-
   /*
    * day mock
    *
@@ -177,8 +155,8 @@ describe("Calendr", function() {
    */
 
   function dayMock(year, month) {
-    return function(n) {
-      return new Day(n, month, year);
+    return function(date) {
+      return new Day(year, month, date);
     };
   }
 });
