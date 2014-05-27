@@ -18,7 +18,6 @@
     window.Calendr = Calendr;
   }
 
-
   /*
    * days in english
    */
@@ -32,7 +31,6 @@
     'friday',
     'saturday'
   ];
-
 
   /*
    * months in english
@@ -53,7 +51,6 @@
     'December'
   ];
 
-
   /*
    * Calendr
    *
@@ -72,7 +69,6 @@
     this.auto = opts.auto || false;
     this.build();
   }
-
 
   /*
    * build calendar properties
@@ -102,7 +98,6 @@
     }
   };
 
-
   /*
    * property alias for #slice
    *
@@ -113,7 +108,6 @@
   Calendr.prototype.__defineGetter__('grid', function() {
     return this._grid || (this._grid = this.slice());
   });
-
 
   /*
    * slices the calendar days up into weeks
@@ -138,7 +132,6 @@
     return weeks;
   };
 
-
   /*
    * move forward one month
    *
@@ -150,7 +143,6 @@
     this.build();
   };
 
-
   /*
    * move back one month
    *
@@ -161,7 +153,6 @@
     this.moment.subtract('month', 1);
     this.build();
   };
-
 
   /*
    * return today
@@ -187,7 +178,6 @@
     }
   });
 
-
   /*
    * create an array of calendar days
    *
@@ -204,7 +194,6 @@
       return day.call(self, (i+1), month);
     });
   }
-
 
   /*
    * pad days so 1st day starts on same index of day of the week
@@ -224,7 +213,6 @@
       days.splice(0, 0, day.call(self, (numofdayslastmonth-i), month));
     }
   }
-
 
   /*
    * pad the last week to be a full 7 length array
@@ -257,7 +245,6 @@
     this.year = year;
   }
 
-
   /*
    * is it today?
    *
@@ -269,7 +256,6 @@
     var t = new Date();
     return this.date == t.getDate() && this.month == (t.getMonth()+1) && this.year == t.getFullYear();
   });
-
 
   /*
    * return day object or numer
@@ -287,6 +273,5 @@
       return date;
     }
   }
-
 })();
 
