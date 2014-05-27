@@ -7,14 +7,12 @@
 
   if ('undefined' !== typeof module && 'undefined' !== typeof module.exports) {
     moment = require('moment');
-
     exports = module.exports = Calendr;
   } else {
     if (!('moment' in window)) {
       return console.error('Moment.js is required');
     }
     moment = window.moment;
-
     window.Calendr = Calendr;
   }
 
@@ -60,12 +58,12 @@
    */
 
   function Calendr(date, opts) {
+    this._date = date; // save the original date
+    this.moment = moment(this._date);
+
     opts = opts || {};
     this.auto = opts.auto || false;
     this.dayObjects = opts.dayObjects || false;
-
-    this._date = date; // save the original date
-    this.moment = moment(this._date);
 
     this.build();
   }
