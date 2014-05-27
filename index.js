@@ -266,9 +266,9 @@
    * @api public
    */
 
-  Day.prototype.__defineGetter__('date', function() {
+  Day.prototype.date = function() {
     return this._toDate.getDate();
-  });
+  };
 
   /*
    * month
@@ -277,9 +277,9 @@
    * @api public
    */
 
-  Day.prototype.__defineGetter__('month', function() {
+  Day.prototype.month = function() {
     return this._toDate.getMonth()+1; // 1 indexed
-  });
+  };
 
   /*
    * year
@@ -288,9 +288,9 @@
    * @api public
    */
 
-  Day.prototype.__defineGetter__('year', function() {
+  Day.prototype.year = function() {
     return this._toDate.getFullYear();
-  });
+  };
 
   /*
    * day of the week (Monday, Tuesday, etc...)
@@ -311,7 +311,7 @@
    */
 
   Day.prototype.nameOfMonth = function() {
-    return months[this.month-1];
+    return months[this.month()-1];
   };
 
   /*

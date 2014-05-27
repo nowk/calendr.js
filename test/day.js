@@ -19,15 +19,15 @@ describe("Day", function() {
     });
 
     it('returns the date', function() {
-      assert.equal(day.date, 27);
+      assert.equal(day.date(), 27);
     });
 
     it('returns the month, 1 indexed', function() {
-      assert.equal(day.month, 5);
+      assert.equal(day.month(), 5);
     });
 
     it('returns the full year', function() {
-      assert.equal(day.year, 2014);
+      assert.equal(day.year(), 2014);
     });
 
     describe("require invocation", function() {
