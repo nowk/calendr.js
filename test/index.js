@@ -134,14 +134,14 @@ describe("Calendr", function() {
     var may = new Date(2014, 4);
     var aprilcal = new Calendr(april, {auto: true, dayObjects: true});
     var maycal = new Calendr(may, {auto: true, dayObjects: true});
-    assert.deepEqual(aprilcal.today, day(21));
-    assert.isUndefined(maycal.today);
+    assert.deepEqual(aprilcal.getToday(), day(21));
+    assert.isUndefined(maycal.getToday());
 
     var aprilcalNoDayObj = new Calendr(april);
-    assert.equal(aprilcalNoDayObj.today, 21);
+    assert.equal(aprilcalNoDayObj.getToday(), 21);
 
     var april2015 = new Calendr(new Date(2015, 3));
-    assert.isUndefined(april2015.today);
+    assert.isUndefined(april2015.getToday());
 
     clock.restore();
   });

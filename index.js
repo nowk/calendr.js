@@ -161,7 +161,7 @@
    * @api public
    */
 
-  Calendr.prototype.__defineGetter__('today', function() {
+  Calendr.prototype.getToday = function() {
     var t = new Date();
     if (this.month !== t.getMonth()+1 || this.year !== t.getFullYear()) {
       return;
@@ -176,7 +176,7 @@
         return d;
       }
     }
-  });
+  };
 
   /*
    * create an array of calendar days
