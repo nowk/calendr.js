@@ -57,17 +57,14 @@ describe("Calendr", function() {
     var aprilcal = new Calendr(new Date(2014, 3));
     var maycal = new Calendr(new Date(2014, 4));
 
-    assert.equal(aprilcal.nameOfMonth, 'April');
-    assert.equal(maycal.nameOfMonth, 'May');
-
-    assert.equal(maycal.prevnameOfMonth, 'April');
-    assert.equal(maycal.nextnameOfMonth, 'June');
+    assert.equal(aprilcal.nameOfMonth(), 'April');
+    assert.equal(maycal.nameOfMonth(), 'May');
   });
 
   it("can move forward and backward by month", function() {
     var april = new Date(2014, 3);
     var cal = new Calendr(april);
-    assert.equal(cal.nameOfMonth, 'April');
+    assert.equal(cal.nameOfMonth(), 'April');
     assert.deepEqual(cal.grid(), [
       [30,  31,  1,   2,   3,   4,   5],
       [6,   7,   8,   9,   10,  11,  12],
@@ -77,7 +74,7 @@ describe("Calendr", function() {
     ]);
 
     cal.goForwardMonth();
-    assert.equal(cal.nameOfMonth, 'May');
+    assert.equal(cal.nameOfMonth(), 'May');
     assert.deepEqual(cal.grid(), [
       [27,  28,  29,  30,  1,   2,   3],
       [4,   5,   6,   7,   8,   9,   10],
@@ -87,7 +84,7 @@ describe("Calendr", function() {
     ]);
 
     cal.goBackMonth();
-    assert.equal(cal.nameOfMonth, 'April');
+    assert.equal(cal.nameOfMonth(), 'April');
     assert.deepEqual(cal.grid(), [
       [30,  31,  1,   2,   3,   4,   5],
       [6,   7,   8,   9,   10,  11,  12],

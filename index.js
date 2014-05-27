@@ -79,8 +79,6 @@
   Calendr.prototype.build = function() {
     this.year = this.moment.year();
     this.month = this.moment.month()+1; // month is 0 indexed
-    this.nameOfMonth = months[this.month-1];
-
     this.numofdays = this.moment.daysInMonth();
     this.startson = moment(this.year+'-'+this.month, 'YYYY-MM').day();
     this.endson = moment(this.year+'-'+this.month+'-'+this.numofdays, 'YYYY-MM-DD').day();
@@ -88,14 +86,21 @@
     this.prevmonth = moment(new Date(this.moment)).subtract('month', 1);
     this.nextmonth = moment(new Date(this.moment)).add('month', 1);
 
-    this.prevnameOfMonth = months[this.prevmonth.month()];
-    this.nextnameOfMonth = months[this.nextmonth.month()];
-
     if (this.auto) {
       this._grid = this.slice();
     } else {
       delete this._grid; // remove the defined _grid on each build; re-set on next grid call
     }
+  };
+
+  /*
+   * return the name of the month
+   *
+   * @api public
+   */
+
+  Calendr.prototype.nameOfMonth = function() {
+    return months[this.moment.month()];
   };
 
   /*
