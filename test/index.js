@@ -33,9 +33,9 @@ describe("Calendr", function() {
     var now = new Date(2014, 3, 21);
     var clock = sinon.useFakeTimers(now.getTime());
 
-    var a = dayMock(2014, 3);
-    var b = dayMock(2014, 4);
-    var c = dayMock(2014, 5);
+    var a = dayFactory(2014, 3);
+    var b = dayFactory(2014, 4);
+    var c = dayFactory(2014, 5);
 
     var april = new Date(2014, 3);
     var aprilcal = new Calendr(april);
@@ -128,7 +128,7 @@ describe("Calendr", function() {
   it("today's day isToday is true", function() {
     var now = new Date(2014, 3, 21);
     var clock = sinon.useFakeTimers(now.getTime());
-    var day = dayMock(2014, 4);
+    var day = dayFactory(2014, 4);
 
     var april = new Date(2014, 3);
     var may = new Date(2014, 4);
@@ -147,14 +147,14 @@ describe("Calendr", function() {
   });
 
   /*
-   * day mock
+   * day factory
    *
    * @param {Number} year
    * @param {Number} month
    * @return {Function}
    */
 
-  function dayMock(year, month) {
+  function dayFactory(year, month) {
     return function(date) {
       return new Day(year, month, date);
     };
