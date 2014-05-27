@@ -55,6 +55,7 @@
    * Calendr
    *
    * @param {Date} origin
+   * @param {Object} opts
    * @constructor
    */
 
