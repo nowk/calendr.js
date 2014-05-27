@@ -10,7 +10,7 @@ describe("Calendr", function() {
   it("returns an array of the calendar month's weeks", function() {
     var april = new Date(2014, 03); // month is 0 indexed
     var aprilcal = new Calendr(april);
-    assert.deepEqual(aprilcal.grid, [
+    assert.deepEqual(aprilcal.grid(), [
       [30,  31,  1,   2,   3,   4,   5],
       [6,   7,   8,   9,   10,  11,  12],
       [13,  14,  15,  16,  17,  18,  19],
@@ -20,7 +20,7 @@ describe("Calendr", function() {
 
     var may = new Date(2014, 04);
     var maycal = new Calendr(may);
-    assert.deepEqual(maycal.grid, [
+    assert.deepEqual(maycal.grid(), [
       [27,  28,  29,  30,  1,   2,   3],
       [4,   5,   6,   7,   8,   9,   10],
       [11,  12,  13,  14,  15,  16,  17],
@@ -42,7 +42,7 @@ describe("Calendr", function() {
 
     aprilcal.dayObjects = true;
 
-    assert.deepEqual(aprilcal.grid, [
+    assert.deepEqual(aprilcal.grid(), [
       [a(30),  a(31),  b(1),   b(2),   b(3),   b(4),   b(5)],
       [b(6),   b(7),   b(8),   b(9),   b(10),  b(11),  b(12)],
       [b(13),  b(14),  b(15),  b(16),  b(17),  b(18),  b(19)],
@@ -68,7 +68,7 @@ describe("Calendr", function() {
     var april = new Date(2014, 3);
     var cal = new Calendr(april);
     assert.equal(cal.nameOfMonth, 'April');
-    assert.deepEqual(cal.grid, [
+    assert.deepEqual(cal.grid(), [
       [30,  31,  1,   2,   3,   4,   5],
       [6,   7,   8,   9,   10,  11,  12],
       [13,  14,  15,  16,  17,  18,  19],
@@ -78,7 +78,7 @@ describe("Calendr", function() {
 
     cal.goForwardMonth();
     assert.equal(cal.nameOfMonth, 'May');
-    assert.deepEqual(cal.grid, [
+    assert.deepEqual(cal.grid(), [
       [27,  28,  29,  30,  1,   2,   3],
       [4,   5,   6,   7,   8,   9,   10],
       [11,  12,  13,  14,  15,  16,  17],
@@ -88,7 +88,7 @@ describe("Calendr", function() {
 
     cal.goBackMonth();
     assert.equal(cal.nameOfMonth, 'April');
-    assert.deepEqual(cal.grid, [
+    assert.deepEqual(cal.grid(), [
       [30,  31,  1,   2,   3,   4,   5],
       [6,   7,   8,   9,   10,  11,  12],
       [13,  14,  15,  16,  17,  18,  19],
@@ -118,8 +118,8 @@ describe("Calendr", function() {
 
     var may = new Date(2014, 04);
     var maycal = new Calendr(may);
-    assert.deepEqual(maycal.grid, [[1, 2, 3], [4, 5, 6]]);
-    assert.deepEqual(maycal.grid, [[1, 2, 3], [4, 5, 6]]);
+    assert.deepEqual(maycal.grid(), [[1, 2, 3], [4, 5, 6]]);
+    assert.deepEqual(maycal.grid(), [[1, 2, 3], [4, 5, 6]]);
 
     s.verify();
     Calendr.prototype.slice.restore();

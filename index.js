@@ -105,9 +105,9 @@
    * @api public
    */
 
-  Calendr.prototype.__defineGetter__('grid', function() {
+  Calendr.prototype.grid = function() {
     return this._grid || (this._grid = this.slice());
-  });
+  };
 
   /*
    * slices the calendar days up into weeks
@@ -167,7 +167,7 @@
       return;
     }
 
-    var flat = [].concat.apply([], this.grid);
+    var flat = [].concat.apply([], this.grid());
     var len = flat.length;
     var i = t.getDate()-1; // start from today, TODO save pad length so we can lookup via index without looping
     for(; i<len; i++) {
