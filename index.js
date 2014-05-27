@@ -60,14 +60,13 @@
    */
 
   function Calendr(date, opts) {
-    if ('undefined' === typeof opts) {
-      opts = {};
-    }
-
-    this._date = date;
-    this.moment = moment(this._date);
-    this.dayObjects = opts.dayObjects || false;
+    opts = opts || {};
     this.auto = opts.auto || false;
+    this.dayObjects = opts.dayObjects || false;
+
+    this._date = date; // save the original date
+    this.moment = moment(this._date);
+
     this.build();
   }
 
@@ -83,9 +82,6 @@
     this.numofdays = this.moment.daysInMonth();
     this.startson = moment(this.year+'-'+this.month, 'YYYY-MM').day();
     this.endson = moment(this.year+'-'+this.month+'-'+this.numofdays, 'YYYY-MM-DD').day();
-
-    this.prevmonth = moment(new Date(this.moment)).subtract('month', 1);
-    this.nextmonth = moment(new Date(this.moment)).add('month', 1);
 
     if (this.auto) {
       this._grid = this.slice();
@@ -193,9 +189,8 @@
 
   function calendardays() {
     var self = this;
-    var month = self.moment;
-    var days = Array.apply(null, Array(self.numofdays));
-
+    var month = this.moment;
+    var days = Array.apply(null, Array(this.numofdays));
     return days.map(function(d, i) {
       return day.call(self, (i+1), month);
     });
@@ -210,11 +205,10 @@
 
   function prepad(days) {
     var self = this;
-    var month = self.prevmonth;
+    var month = moment(new Date(this.moment)).subtract('month', 1);
     var numofdayslastmonth = month.daysInMonth();
-
     var i = 0;
-    var index = self.startson;
+    var index = this.startson;
     for(; i<index; i++) {
       days.splice(0, 0, day.call(self, (numofdayslastmonth-i), month));
     }
@@ -229,8 +223,7 @@
 
   function fill(week) {
     var self = this;
-    var month = self.nextmonth;
-
+    var month = moment(new Date(this.moment)).add('month', 1);
     var i = 0;
     var len = 7-week.length;
     for(; i<len; i++) {
