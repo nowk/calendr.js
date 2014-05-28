@@ -16,7 +16,8 @@
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-mocha-test": "^0.10.2",
     "sinon": "^1.9.1",
-    "mocha": "^1.19.0"
+    "mocha": "^1.19.0",
+    "grunt-cli": "^0.1.13"
   },
   "scripts": {
     "test": "make test"
