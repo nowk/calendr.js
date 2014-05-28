@@ -207,6 +207,10 @@
 
     events = events || [];
 
+    if (events.length === 0) {
+      return;
+    }
+
     if ('undefined' === typeof this._grid) {
       this.grid();
     }
