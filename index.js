@@ -193,6 +193,32 @@
   };
 
   /*
+   * define events for the calendr month
+   *
+   * @param {Array} events
+   * @api public
+   */
+
+  Calendr.prototype.events = function(events) {
+    events = events || [];
+
+    if ('undefined' === typeof this._grid) {
+      this.grid();
+    }
+
+    var self = this;
+    var i = 0;
+    var len = events.length;
+    for(; i<len; i++) {
+      var event = events[i];
+      var day = self.getDay(event.startson.getDate());
+      if (day) {
+        day.events.push(event);
+      }
+    }
+  };
+
+  /*
    * create an array of calendar days
    *
    * @return {Array}
@@ -258,6 +284,7 @@
 
   function Day(year, month, date) {
     this._toDate = new Date(year, month-1, date);
+    this.events = [];
   }
 
   /*
