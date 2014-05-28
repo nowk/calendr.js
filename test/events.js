@@ -4,6 +4,13 @@ var assert = require('chai').assert;
 var Calendr = require('..');
 
 describe('events', function() {
+  it("throws if calendr is not dayObjects: true", function() {
+    assert.throws(function() {
+      var cal = new Calendr(new Date());
+      cal.events([]);
+    }, "Calendr must be set with dayObjects = true to use the `events` method");
+  });
+
   it("each event should be associated to their respective dates", function() {
     var caldate = new Date(2014, 0);
     var events = [

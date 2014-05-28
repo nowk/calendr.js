@@ -200,6 +200,11 @@
    */
 
   Calendr.prototype.events = function(events) {
+    if (!this.dayObjects) {
+      var msg = 'Calendr must be set with dayObjects = true to use the `events` method';
+      throw new Error(msg);
+    }
+
     events = events || [];
 
     if ('undefined' === typeof this._grid) {
