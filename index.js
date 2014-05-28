@@ -163,19 +163,33 @@
 
   Calendr.prototype.getToday = function() {
     var t = new Date();
+
+    // return if it's not the same month as now
     if (this.month !== t.getMonth()+1 || this.year !== t.getFullYear()) {
       return;
     }
 
-    var flat = [].concat.apply([], this.grid());
-    var len = flat.length;
-    var i = t.getDate()-1; // start from today, TODO save pad length so we can lookup via index without looping
-    for(; i<len; i++) {
-      var d = flat[i];
-      if (d == t.getDate() || (d instanceof Day && d.isToday())) {
-        return d;
-      }
+    return this.getDay(t.getDate());
+  };
+
+  /*
+   * return the day
+   *
+   * @param {Number} date
+   * @return {Day}
+   * @api public
+   */
+
+  Calendr.prototype.getDay = function(date) {
+    var dayi = (date-1)+this.startson; // offset with the actual start on index
+    var weeki = Math.floor(dayi/7);
+
+    // get the dayi offset if not in the first week
+    if (weeki > 0) {
+      dayi = dayi-(weeki*7); 
     }
+
+    return this.grid()[weeki][dayi];
   };
 
   /*
