@@ -215,6 +215,25 @@
       this.grid();
     }
 
+    // sort events by date, name ASC
+    events.sort(function(a, b) {
+      var rsec = 100000;
+      var aint = parseInt(a.startson.getTime()/rsec);
+      var bint = parseInt(b.startson.getTime()/rsec);
+
+      if (aint === bint) { // date is the same
+        if (a.name > b.name) {
+          return 1;
+        } else if(a.name < b.name) {
+          return -1;
+        } else {
+          return 0;
+        }
+      }
+
+      return aint - bint;
+    });
+
     var self = this;
     var i = 0;
     var len = events.length;
