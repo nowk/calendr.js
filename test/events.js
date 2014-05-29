@@ -47,6 +47,56 @@ describe('events', function() {
     });
     assert.deepEqual(sorted, ['Two', 'Four', 'One', 'Three']);
   });
+
+      var events = [
+        ef("One", new Date(2014, 0, 3), {repeatEndson: new Date(2014, 0, 4), repeats: 'daily'})
+      ];
+      cal.events(events);
+
+      assert.lengthOf(cal.getDay(1).events, 0);
+      assert.lengthOf(cal.getDay(2).events, 0);
+      assert.lengthOf(cal.getDay(3).events, 1);
+      assert.lengthOf(cal.getDay(4).events, 1);
+    });
+
+    it("recurrs a number of times", function() {
+      var events = [
+        ef("One", new Date(2014, 0, 1), {repeatTimes: 4, repeats: 'daily'})
+      ];
+      cal.events(events);
+
+      assert.lengthOf(cal.getDay(1).events, 1);
+      assert.lengthOf(cal.getDay(2).events, 1);
+      assert.lengthOf(cal.getDay(3).events, 1);
+      assert.lengthOf(cal.getDay(4).events, 1);
+    });
+
+    it("will use number of recurrs over ends on date if both are given", function() {
+      var events = [
+        ef("One", new Date(2014, 0, 1), {repeatTimes: 2, repeatEndson: new Date(2014, 0, 4), repeats: 'daily'}),
+      ];
+      cal.events(events);
+
+      assert.lengthOf(cal.getDay(1).events, 1);
+      assert.lengthOf(cal.getDay(2).events, 1);
+      assert.lengthOf(cal.getDay(3).events, 0);
+      assert.lengthOf(cal.getDay(4).events, 0);
+    });
+
+    it("infinitely", function() {
+      var events = [
+        ef("One", new Date(2014, 0, 3), {repeatTimes: -1, repeats: 'daily'}),
+        ef("Two", new Date(2014, 0, 3), {repeatEndson: -1, repeats: 'daily'}),
+      ];
+      cal.events(events);
+
+      assert.lengthOf(cal.getDay(1).events, 0);
+      assert.lengthOf(cal.getDay(2).events, 0);
+      for(var i=3; i<32; i++) {
+        assert.lengthOf(cal.getDay(i).events, 2);
+      }
+    });
+  });
 });
 
 /*
@@ -54,15 +104,20 @@ describe('events', function() {
  *
  * @param {String} name
  * @param {Date} startson
- * @param {Ends} endson
+ * @param {Object} opts
  * @return {Object}
  */
 
-function ef(name, startson, endson) {
-  return {
+function ef(name, startson, opts) {
+  var event = {
     name: name,
-    startson: startson,
-    endson: endson
+    startson: startson
   };
+
+  for(var k in opts) {
+    event[k] = opts[k];
+  }
+
+  return event;
 }
 

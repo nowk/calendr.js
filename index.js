@@ -234,14 +234,37 @@
       return aint - bint;
     });
 
+    // TODO ensure events are in the proper month?
+
     var self = this;
     var i = 0;
     var len = events.length;
     for(; i<len; i++) {
       var event = events[i];
-      var day = self.getDay(event.startson.getDate());
+      var startson = event.startson.getDate();
+      var day = self.getDay(startson);
+
       if (day) {
-        day.events.push(event);
+        switch(event.repeats) {
+          case 'daily':
+            var s = event.startson.getDate();
+            var e;
+
+            if (!!!event.repeatTimes || !!!event.repeatEndson) {
+              e = self.numofdays+1;
+            } else {
+              e = (event.repeatTimes || event.repeatEndson.getDate())+1;
+            }
+
+            for(; s<e; s++) {
+              var _daily = self.getDay(s);
+              _daily.events.push(event);
+            }
+            break;
+          default:
+            day.events.push(event);
+            break;
+        }
       }
     }
   };
