@@ -85,8 +85,8 @@ describe('events', function() {
 
     it("infinitely", function() {
       var events = [
-        ef("One", new Date(2014, 0, 3), {repeatTimes: -1, repeats: 'daily'}),
-        ef("Two", new Date(2014, 0, 3), {repeatEndson: -1, repeats: 'daily'}),
+        ef("One", new Date(2014, 0, 3), {repeats: 'daily'}),
+        ef("Two", new Date(2014, 0, 3), {repeats: 'daily'}),
       ];
       cal.events(events);
 
