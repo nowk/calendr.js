@@ -252,20 +252,20 @@
       if (day) {
         switch(event.repeats) {
           case 'daily':
-            var e;
+            var endson;
 
             if (!!!event.repeatTimes && !!!event.repeatEndson) { // infinity
-              e = self.numofdays+1;
+              endson = self.numofdays+1;
             } else {
-              e = (event.repeatTimes || event.repeatEndson.getDate())+1;
+              endson = (event.repeatTimes || event.repeatEndson.getDate())+1;
 
               // event recurrs into the next month
               if (!!event.repeatEndson && event.repeatEndson.getMonth() > self.moment.month()) {
-                e = self.numofdays+1;
+                endson = self.numofdays+1;
               }
             }
 
-            for(; startson<e; startson++) {
+            for(; startson<endson; startson++) {
               var _daily = self.getDay(startson);
               _daily.events.push(event);
             }
