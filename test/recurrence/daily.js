@@ -93,7 +93,7 @@ describe('daily recurrance', function() {
 
     it("events must be called after the month has been paginated", function() {
       var event = ef("One", new Date(2014, 0, 3), {
-        repeatEndson: new Date(2014, 1, 4),
+        repeatEndson: new Date(2014, 2, 4),
         repeats: 'daily'
       });
       cal.events([event]);
@@ -105,7 +105,12 @@ describe('daily recurrance', function() {
       assert.lengthOf(cal.getDay(4).events, 0);
 
       cal.events([event]);
+      for(var i=1; i<29; i++) {
+        assert.lengthOf(cal.getDay(i).events, 1);
+      }
 
+      cal.goForwardMonth();
+      cal.events([event]);
       assert.lengthOf(cal.getDay(1).events, 1);
       assert.lengthOf(cal.getDay(2).events, 1);
       assert.lengthOf(cal.getDay(3).events, 1);
