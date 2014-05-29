@@ -5,7 +5,7 @@ var ef = t.eventFactory;
 var assert = require('chai').assert;
 var Calendr = require('../..');
 
-describe('daily recurrance', function() {
+describe('daily recurrence', function() {
   var caldate;
   var cal;
   beforeEach(function() {
