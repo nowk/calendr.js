@@ -48,6 +48,13 @@ describe('events', function() {
     assert.deepEqual(sorted, ['Two', 'Four', 'One', 'Three']);
   });
 
+  describe("daily recurring", function() {
+    var cal;
+    beforeEach(function() {
+      cal = new Calendr(caldate, {dayObjects: true});
+    });
+
+    it("recurrs to a given ends on date", function() {
       var events = [
         ef("One", new Date(2014, 0, 3), {repeatEndson: new Date(2014, 0, 4), repeats: 'daily'})
       ];
