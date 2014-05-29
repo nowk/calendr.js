@@ -247,7 +247,6 @@
       if (day) {
         switch(event.repeats) {
           case 'daily':
-            var s = event.startson.getDate();
             var e;
 
             if (!!!event.repeatTimes || !!!event.repeatEndson) {
@@ -256,8 +255,8 @@
               e = (event.repeatTimes || event.repeatEndson.getDate())+1;
             }
 
-            for(; s<e; s++) {
-              var _daily = self.getDay(s);
+            for(; startson<e; startson++) {
+              var _daily = self.getDay(startson);
               _daily.events.push(event);
             }
             break;
