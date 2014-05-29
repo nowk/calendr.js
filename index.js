@@ -249,7 +249,7 @@
           case 'daily':
             var e;
 
-            if (!!!event.repeatTimes || !!!event.repeatEndson) {
+            if (!!!event.repeatTimes && !!!event.repeatEndson) {
               e = self.numofdays+1;
             } else {
               e = (event.repeatTimes || event.repeatEndson.getDate())+1;
