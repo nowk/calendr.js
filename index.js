@@ -218,8 +218,8 @@
     // sort events by date, name ASC
     events.sort(function(a, b) {
       var rsec = 100000;
-      var aint = parseInt(a.startson.getTime()/rsec);
-      var bint = parseInt(b.startson.getTime()/rsec);
+      var aint = parseInt(a.startson.getTime()/rsec, 10);
+      var bint = parseInt(b.startson.getTime()/rsec, 10);
 
       if (aint === bint) { // date is the same
         if (a.name > b.name) {
