@@ -1,5 +1,7 @@
 /* jshint node: true */
 
+var t = require('./test_helper');
+var ef = t.eventFactory;
 var assert = require('chai').assert;
 var Calendr = require('..');
 
@@ -48,83 +50,34 @@ describe('events', function() {
     assert.deepEqual(sorted, ['Two', 'Four', 'One', 'Three']);
   });
 
-  describe("daily recurring", function() {
-    var cal;
-    beforeEach(function() {
-      cal = new Calendr(caldate, {dayObjects: true});
-    });
+  describe("all-day event", function() {
+    it("sorts all-day events to the top of the sort heap, then by name");
+    it("if an all-day event recurs 2 or more days in a row, and another all-day event that " +
+      "starts on the 2nd day has a higher sort order. The first all-day event gets indexed " +
+      "at the same index as on day 2");
 
-    it("recurrs to a given ends on date", function() {
-      var events = [
-        ef("One", new Date(2014, 0, 3), {repeatEndson: new Date(2014, 0, 4), repeats: 'daily'})
-      ];
-      cal.events(events);
+      // This only applies on a weekly basis
+      // s | m | t | w | t | f | s
+      // ------------------------- week 1
+      //   | b | b |
+      // a | a | a | a | a | a | a
+      // ------------------------- week 2
+      // a | a |
+      // ------------------------- week 3
+      //   | b | b |
+      //       | a | a | a |
+      // ------------------------- week 4
 
-      assert.lengthOf(cal.getDay(1).events, 0);
-      assert.lengthOf(cal.getDay(2).events, 0);
-      assert.lengthOf(cal.getDay(3).events, 1);
-      assert.lengthOf(cal.getDay(4).events, 1);
-    });
+  });
 
-    it("recurrs a number of times", function() {
-      var events = [
-        ef("One", new Date(2014, 0, 1), {repeatTimes: 4, repeats: 'daily'})
-      ];
-      cal.events(events);
+  describe("dates that start in one day and end in another", function() {
+    it("splits the date up into 2, one that spans from the start time to midnight, and another " +
+      "that starts at midnight and ends at the end time");
 
-      assert.lengthOf(cal.getDay(1).events, 1);
-      assert.lengthOf(cal.getDay(2).events, 1);
-      assert.lengthOf(cal.getDay(3).events, 1);
-      assert.lengthOf(cal.getDay(4).events, 1);
-    });
-
-    it("will use number of recurrs over ends on date if both are given", function() {
-      var events = [
-        ef("One", new Date(2014, 0, 1), {repeatTimes: 2, repeatEndson: new Date(2014, 0, 4), repeats: 'daily'}),
-      ];
-      cal.events(events);
-
-      assert.lengthOf(cal.getDay(1).events, 1);
-      assert.lengthOf(cal.getDay(2).events, 1);
-      assert.lengthOf(cal.getDay(3).events, 0);
-      assert.lengthOf(cal.getDay(4).events, 0);
-    });
-
-    it("infinitely", function() {
-      var events = [
-        ef("One", new Date(2014, 0, 3), {repeats: 'daily'}),
-        ef("Two", new Date(2014, 0, 3), {repeats: 'daily'}),
-      ];
-      cal.events(events);
-
-      assert.lengthOf(cal.getDay(1).events, 0);
-      assert.lengthOf(cal.getDay(2).events, 0);
-      for(var i=3; i<32; i++) {
-        assert.lengthOf(cal.getDay(i).events, 2);
-      }
+    describe("if the span is larger th 2 days", function() {
+      it("splits the date up into n, one that spans from the start time to midnight, and another " +
+        "that starts at midnight and ends at the end time. The middle days start from midnight and end at midnight");
     });
   });
 });
-
-/*
- * event factory
- *
- * @param {String} name
- * @param {Date} startson
- * @param {Object} opts
- * @return {Object}
- */
-
-function ef(name, startson, opts) {
-  var event = {
-    name: name,
-    startson: startson
-  };
-
-  for(var k in opts) {
-    event[k] = opts[k];
-  }
-
-  return event;
-}
 
