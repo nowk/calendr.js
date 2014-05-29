@@ -244,15 +244,25 @@
       var startson = event.startson.getDate();
       var day = self.getDay(startson);
 
+      // event recurrs from the previous month
+      if (event.startson.getMonth() < self.moment.month()) {
+        startson = 1;
+      }
+
       if (day) {
         switch(event.repeats) {
           case 'daily':
             var e;
 
-            if (!!!event.repeatTimes && !!!event.repeatEndson) {
+            if (!!!event.repeatTimes && !!!event.repeatEndson) { // infinity
               e = self.numofdays+1;
             } else {
               e = (event.repeatTimes || event.repeatEndson.getDate())+1;
+
+              // event recurrs into the next month
+              if (!!event.repeatEndson && event.repeatEndson.getMonth() > self.moment.month()) {
+                e = self.numofdays+1;
+              }
             }
 
             for(; startson<e; startson++) {
