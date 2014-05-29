@@ -104,5 +104,44 @@ describe('daily recurrance', function() {
     assert.lengthOf(cal.getDay(4).events, 1);
     assert.lengthOf(cal.getDay(5).events, 0);
   });
+
+  it("recurr repeat times exeactly the remainder of the month", function() {
+    var event = ef("One", new Date(2014, 0, 3), {
+      repeatTimes: 28,
+      repeats: 'daily'
+    });
+    cal.events([event]);
+
+    for(var i=3; i<31; i++) {
+      assert.lengthOf(cal.getDay(i).events, 1);
+    }
+  });
+
+  it("recurr repeat times spans into upcomming months", function() {
+    var event = ef("One", new Date(2014, 0, 3), {
+      repeatTimes: 63,
+      repeats: 'daily'
+    });
+    cal.events([event]);
+
+    for(var i=3; i<31; i++) {
+      assert.lengthOf(cal.getDay(i).events, 1);
+    }
+
+    cal.goForwardMonth();
+    cal.events([event]);
+
+    for(i=1; i<29; i++) {
+      assert.lengthOf(cal.getDay(i).events, 1);
+    }
+
+    cal.goForwardMonth();
+    cal.events([event]);
+
+    for(i=1; i<8; i++) {
+      assert.lengthOf(cal.getDay(i).events, 1);
+    }
+    assert.lengthOf(cal.getDay(9).events, 0);
+  });
 });
 

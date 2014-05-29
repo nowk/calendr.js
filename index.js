@@ -256,6 +256,26 @@
 
             if (!!event.repeatTimes) {
               endson = event.repeatTimes;
+
+              // repeat times outside of number days left in the month
+              if (event.repeatTimes >= self.numofdays-startson) {
+
+                // subtract # of days in previous months
+                var diff = endson;
+                var m = event.startson.getMonth();
+                var thismonth = self.moment.month();
+                for(; m<thismonth; m++) {
+                  var numofdays = new Date(self.moment.year(), m+1, 0).getDate();
+                  diff = diff-numofdays;
+                }
+
+                // we still have more repeating days than month days
+                if (diff > self.numofdays) {
+                  endson = self.numofdays;
+                } else {
+                  endson = diff+event.startson.getDate(); // add startson date as offset
+                }
+              }
             } else if (!!event.repeatEndson) {
               if (event.repeatEndson.getMonth() > self.moment.month()) {
                 endson = self.numofdays;
