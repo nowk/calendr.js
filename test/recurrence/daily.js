@@ -24,6 +24,7 @@ describe('daily recurrence', function() {
     assert.lengthOf(cal.getDay(2).events, 0);
     assert.lengthOf(cal.getDay(3).events, 1);
     assert.lengthOf(cal.getDay(4).events, 1);
+    assert.lengthOf(cal.getDay(5).events, 0);
   });
 
   it("recurrs a number of times", function() {
@@ -34,6 +35,7 @@ describe('daily recurrence', function() {
     assert.lengthOf(cal.getDay(2).events, 1);
     assert.lengthOf(cal.getDay(3).events, 1);
     assert.lengthOf(cal.getDay(4).events, 1);
+    assert.lengthOf(cal.getDay(5).events, 0);
   });
 
   it("will use number of recurrs over ends on date if both are given", function() {
