@@ -291,6 +291,35 @@
               _daily.events.push(event);
             }
             break;
+
+          case 'weekly':
+            var wendson = event.repeatEndson.getDate();
+            var weeki = weekIndex.call(self, startson);
+            var weekendi = weekIndex.call(self, wendson)+1;
+            var repeatsOnIndexes = event.repeatsOn.map(dayNameIndex);
+
+            for(; weeki<weekendi; weeki++) {
+              for(var r=0, rlen=repeatsOnIndexes.length; r<rlen; r++) {
+                var dayi = repeatsOnIndexes[r]-self.startson;
+
+                if (weeki > 0) {
+                  dayi = dayi+(weeki*7);
+                }
+
+                if (dayi > 0) {
+                  dayi = dayi+1;
+                } else {
+                  continue;
+                }
+
+                var wday = self.getDay(dayi);
+                if (wday) {
+                  wday.events.push(event);
+                }
+              }
+            }
+            break;
+
           default:
             day.events.push(event);
             break;
@@ -298,6 +327,18 @@
       }
     }
   };
+
+  /*
+   * return index of day in week, by date name
+   *
+   * @param {String} dayName
+   * @return {Number{
+   * @api private
+   */
+
+  function dayNameIndex(dayName) {
+    return days.indexOf(dayName);
+  }
 
   /*
    * return the week index of give date
