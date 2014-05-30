@@ -115,8 +115,8 @@ describe('daily recurrence', function() {
     cal.goForwardMonth();
     cal.events([event]);
 
-    assert.lengthOf(cal.getDay(9).events, 0);
     assertEvents(cal, range(1, 7, true), 1);
+    assertEvents(cal, 8, 0);
   });
 });
 
