@@ -293,11 +293,25 @@
             break;
 
           case 'weekly':
-            var wendson = event.repeatEndson && event.repeatEndson.getDate();
-            var weeki = weekIndex.call(self, startson);
-            var weekendi = (event.repeatTimes || weekIndex.call(self, wendson))+1;
-            var repeatsOnIndexes = event.repeatsOn.map(dayNameIndex);
+            // if repeats on has a day this week, eg starts on friday, repeats on m, t, f
+            // f should be marked, the previous m, t should not
 
+            var weeki = weekIndex.call(self, startson);
+            var weekendi;
+
+            if (!!event.repeatTimes) {
+              weekendi = event.repeatTimes;
+            } else if(!!event.repeatEndson) {
+              weekendi = weekIndex.call(self, event.repeatEndson.getDate());
+            }
+
+            if (weekendi) {
+              weekendi++;
+            } else {
+              weekendi = self.grid().length;
+            }
+
+            var repeatsOnIndexes = event.repeatsOn.map(dayNameIndex);
             for(; weeki<weekendi; weeki++) {
               for(var r=0, rlen=repeatsOnIndexes.length; r<rlen; r++) {
                 var dayi = repeatsOnIndexes[r]-self.startson;
