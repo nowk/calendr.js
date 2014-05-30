@@ -182,7 +182,7 @@
 
   Calendr.prototype.getDay = function(date) {
     var dayi = (date-1)+this.startson; // offset with the actual start on index
-    var weeki = Math.floor(dayi/7);
+    var weeki = weekIndex.call(this, date);
 
     // get the dayi offset if not in the first week
     if (weeki > 0) {
@@ -298,6 +298,19 @@
       }
     }
   };
+
+  /*
+   * return the week index of give date
+   *
+   * @param {Number} date
+   * @return {Number}
+   * @api private
+   */
+
+  function weekIndex(date) {
+    var dayi = (date-1)+this.startson; // offset with the actual start on index
+    return Math.floor(dayi/7);
+  }
 
   /*
    * create an array of calendar days
