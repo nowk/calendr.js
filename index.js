@@ -293,9 +293,9 @@
             break;
 
           case 'weekly':
-            var wendson = event.repeatEndson.getDate();
+            var wendson = event.repeatEndson && event.repeatEndson.getDate();
             var weeki = weekIndex.call(self, startson);
-            var weekendi = weekIndex.call(self, wendson)+1;
+            var weekendi = (event.repeatTimes || weekIndex.call(self, wendson))+1;
             var repeatsOnIndexes = event.repeatsOn.map(dayNameIndex);
 
             for(; weeki<weekendi; weeki++) {
