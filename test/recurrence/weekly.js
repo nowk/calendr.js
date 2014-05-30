@@ -3,6 +3,7 @@
 var t = require("../test_helper");
 var ef = t.eventFactory;
 var assert = require('chai').assert;
+var assertEvents = t.assertEvents;
 var Calendr = require('../..');
 
 describe("weekly recurrence", function() {
@@ -22,13 +23,8 @@ describe("weekly recurrence", function() {
     });
     cal.events([event]);
 
-    assert.lengthOf(cal.getDay(2).events, 1);
-    assert.lengthOf(cal.getDay(6).events, 1);
-    assert.lengthOf(cal.getDay(7).events, 1);
-    assert.lengthOf(cal.getDay(9).events, 1);
-    assert.lengthOf(cal.getDay(13).events, 0);
-    assert.lengthOf(cal.getDay(14).events, 0);
-    assert.lengthOf(cal.getDay(16).events, 0);
+    assertEvents(cal, [2, 6, 7, 9], 1);
+    assertEvents(cal, [13, 14, 16], 0);
   });
 
   it("recurrs a number of times", function() {
@@ -39,16 +35,8 @@ describe("weekly recurrence", function() {
     });
     cal.events([event]);
 
-    assert.lengthOf(cal.getDay(3).events, 0);
-    assert.lengthOf(cal.getDay(6).events, 1);
-    assert.lengthOf(cal.getDay(7).events, 1);
-    assert.lengthOf(cal.getDay(9).events, 1);
-    assert.lengthOf(cal.getDay(13).events, 1);
-    assert.lengthOf(cal.getDay(14).events, 1);
-    assert.lengthOf(cal.getDay(16).events, 1);
-    assert.lengthOf(cal.getDay(20).events, 0);
-    assert.lengthOf(cal.getDay(21).events, 0);
-    assert.lengthOf(cal.getDay(23).events, 0);
+    assertEvents(cal, [6, 7, 9, 13, 14, 16], 1);
+    assertEvents(cal, [3, 20, 21, 23], 0);
   });
 
   it("will use number of recurrs over ends on date if both are given", function() {
@@ -60,16 +48,8 @@ describe("weekly recurrence", function() {
     });
     cal.events([event]);
 
-    assert.lengthOf(cal.getDay(3).events, 0);
-    assert.lengthOf(cal.getDay(6).events, 1);
-    assert.lengthOf(cal.getDay(7).events, 1);
-    assert.lengthOf(cal.getDay(9).events, 1);
-    assert.lengthOf(cal.getDay(13).events, 1);
-    assert.lengthOf(cal.getDay(14).events, 1);
-    assert.lengthOf(cal.getDay(16).events, 1);
-    assert.lengthOf(cal.getDay(20).events, 0);
-    assert.lengthOf(cal.getDay(21).events, 0);
-    assert.lengthOf(cal.getDay(23).events, 0);
+    assertEvents(cal, [6, 7, 9, 13, 14, 16], 1);
+    assertEvents(cal, [3, 20, 21, 23], 0);
   });
 
   it("infinitely", function() {
@@ -79,34 +59,17 @@ describe("weekly recurrence", function() {
     });
     cal.events([event]);
 
+
     assert.lengthOf(cal.getDay(3).events, 0);
     assert.lengthOf(cal.getDay(6).events, 1);
-    assert.lengthOf(cal.getDay(7).events, 1);
-    assert.lengthOf(cal.getDay(9).events, 1);
-    assert.lengthOf(cal.getDay(13).events, 1);
-    assert.lengthOf(cal.getDay(14).events, 1);
-    assert.lengthOf(cal.getDay(16).events, 1);
-    assert.lengthOf(cal.getDay(20).events, 1);
-    assert.lengthOf(cal.getDay(21).events, 1);
-    assert.lengthOf(cal.getDay(23).events, 1);
-    assert.lengthOf(cal.getDay(27).events, 1);
-    assert.lengthOf(cal.getDay(28).events, 1);
-    assert.lengthOf(cal.getDay(30).events, 1);
+
+    assertEvents(cal, [6, 7, 9, 13, 14, 16, 20, 21, 23, 27, 28, 30], 1);
+    assertEvents(cal, [3/*, TODO 6 should 0, since its past start on date*/], 0);
 
     cal.goForwardMonth();
     cal.events([event]);
 
-    assert.lengthOf(cal.getDay(3).events, 1);
-    assert.lengthOf(cal.getDay(4).events, 1);
-    assert.lengthOf(cal.getDay(6).events, 1);
-    assert.lengthOf(cal.getDay(10).events, 1);
-    assert.lengthOf(cal.getDay(11).events, 1);
-    assert.lengthOf(cal.getDay(13).events, 1);
-    assert.lengthOf(cal.getDay(17).events, 1);
-    assert.lengthOf(cal.getDay(18).events, 1);
-    assert.lengthOf(cal.getDay(20).events, 1);
-    assert.lengthOf(cal.getDay(24).events, 1);
-    assert.lengthOf(cal.getDay(25).events, 1);
+    assertEvents(cal, [3, 4, 6, 10, 11, 13, 17, 18, 20, 24, 25], 1);
   });
 });
 
