@@ -216,23 +216,7 @@
     }
 
     // sort events by date, name ASC
-    events.sort(function(a, b) {
-      var rsec = 100000;
-      var aint = parseInt(a.startson.getTime()/rsec, 10);
-      var bint = parseInt(b.startson.getTime()/rsec, 10);
-
-      if (aint === bint) { // date is the same
-        if (a.name > b.name) {
-          return 1;
-        } else if(a.name < b.name) {
-          return -1;
-        } else {
-          return 0;
-        }
-      }
-
-      return aint - bint;
-    });
+    events.sort(sortByNameDate);
 
     // TODO ensure events are in the proper month?
 
@@ -275,6 +259,28 @@
       }
     }
   };
+
+  /*
+   * sort by date, name ASC
+   */
+
+  function sortByNameDate(a, b) {
+    var rsec = 100000;
+    var aint = parseInt(a.startson.getTime()/rsec, 10);
+    var bint = parseInt(b.startson.getTime()/rsec, 10);
+
+    if (aint === bint) { // date is the same
+      if (a.name > b.name) {
+        return 1;
+      } else if(a.name < b.name) {
+        return -1;
+      } else {
+        return 0;
+      }
+    }
+
+    return aint - bint;
+  }
 
   /*
    * return index of day in week, by date name
