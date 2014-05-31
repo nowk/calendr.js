@@ -329,7 +329,14 @@
                 var date = repeatsOnIndexes[r]-self.startson;
                 if (weeki > 0) date = date+(weeki*7);
                 if (date < 0) continue;
-                dates.push(date+1);
+
+                date++;
+
+                if (event.startson.getMonth() === self.moment.month()) {
+                  if (date < event.startson.getDate()) continue;
+                }
+
+                dates.push(date);
               }
             }
 

@@ -59,8 +59,8 @@ describe("weekly recurrence", function() {
     });
     cal.events([event]);
 
-    assertEvents(cal, [6, 7, 9, 13, 14, 16, 20, 21, 23, 27, 28, 30], 1);
-    assertEvents(cal, [3], 0);
+    assertEvents(cal, [7, 9, 13, 14, 16, 20, 21, 23, 27, 28, 30], 1);
+    assertEvents(cal, [3, 6], 0);
 
     cal.goForwardMonth();
     cal.events([event]);
@@ -76,12 +76,8 @@ describe("weekly recurrence", function() {
     });
     cal.events([event]);
 
-
-    assert.lengthOf(cal.getDay(3).events, 0);
-    assert.lengthOf(cal.getDay(6).events, 1);
-
-    assertEvents(cal, [6, 7, 9, 13, 14, 16, 20, 21, 23, 27, 28, 30], 1);
-    assertEvents(cal, [3/*, TODO 6 should 0, since its past start on date*/], 0);
+    assertEvents(cal, [7, 9, 13, 14, 16, 20, 21, 23, 27, 28, 30], 1);
+    assertEvents(cal, [3, 6], 0);
 
     cal.goForwardMonth();
     cal.events([event]);
@@ -119,8 +115,8 @@ describe("weekly recurrence", function() {
       event.repeatTimes = 4;
       cal.events([event]);
 
-      assertEvents(cal, [6, 7, 9, 13, 14, 16, 20, 21, 23, 27, 28, 30], 1);
-      assertEvents(cal, [3/*, TODO 6 should 0, since its past start on date*/], 0);
+      assertEvents(cal, [7, 9, 13, 14, 16, 20, 21, 23, 27, 28, 30], 1);
+      assertEvents(cal, [3, 6], 0);
     });
 
     it("February", function() {
