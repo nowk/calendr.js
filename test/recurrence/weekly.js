@@ -119,13 +119,11 @@ describe("weekly recurrence", function() {
   describe("recurr repeat times spans into upcomming months", function() {
     var event = ef("One", new Date(2014, 0, 7), {
       repeats: 'weekly',
-      repeatTimes: 4,
+      repeatTimes: 15,
       repeatsOn: ["Monday", "Tuesday", "Thursday"]
     });
 
     it("January", function() {
-      event.startson = new Date(2014, 0, 7);
-      event.repeatTimes = 4;
       cal.events([event]);
 
       assertEvents(cal, [7, 9, 13, 14, 16, 20, 21, 23, 27, 28, 30], 1);
@@ -133,7 +131,6 @@ describe("weekly recurrence", function() {
     });
 
     it("February", function() {
-      event.repeatTimes = 8;
       cal.goForwardMonth();
       cal.events([event]); // Feb
 
@@ -141,7 +138,6 @@ describe("weekly recurrence", function() {
     });
 
     it("March", function() {
-      event.repeatTimes = 13;
       cal.goForwardMonth();
       cal.goForwardMonth();
       cal.events([event]); // Mar
@@ -150,7 +146,6 @@ describe("weekly recurrence", function() {
     });
 
     it("April", function() {
-      event.repeatTimes = 14;
       cal.goForwardMonth();
       cal.goForwardMonth();
       cal.goForwardMonth();

@@ -404,12 +404,20 @@
     if (!!event.repeatTimes) {
       len = offset+event.repeatTimes-1;
 
-      var thismonth = cal.moment.month();
-      while(thismonth>event.startson.getMonth()) {
-        i = 0;
-        var m = new Date(cal.moment.year(), cal.moment.month()-thismonth);
-        len = len-(numberOfWeeks(m)-1);
-        thismonth--;
+      if (len > cal.grid().length) {
+        var thismonth = cal.moment.month();
+        while(thismonth>event.startson.getMonth()) {
+          i = 0;
+          var m = new Date(cal.moment.year(), cal.moment.month()-thismonth);
+          len = len-(numberOfWeeks(m)-1);
+          thismonth--;
+        }
+
+        if (len > cal.grid().length) {
+          len = cal.grid().length;
+        }
+
+        len--; // weeks are 0 indexed
       }
     } else if (!!event.repeatEndson &&
       event.repeatEndson.getMonth() === cal.moment.month()) {
