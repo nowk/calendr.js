@@ -31,6 +31,12 @@
   ];
 
   /*
+   * expose days
+   */
+
+  exports.days = days;
+
+  /*
    * months in english
    */
 
