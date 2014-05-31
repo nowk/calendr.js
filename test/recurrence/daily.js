@@ -46,46 +46,63 @@ describe('daily recurrence', function() {
     assertEvents(cal, [3, 4], 0);
   });
 
-  it("infinitely", function() {
+  describe("infinitely", function() {
     var events = [
       ef("One", new Date(2014, 0, 3), {repeats: 'daily'}),
       ef("Two", new Date(2014, 0, 3), {repeats: 'daily'}),
     ];
-    cal.events(events);
 
-    assertEvents(cal, [1, 2], 0);
-    assertEvents(cal, range(3, 31, true), 2);
+    it("January", function() {
+      cal.events(events);
 
-    cal.goForwardMonth();
-    cal.events(events);
+      assertEvents(cal, [1, 2], 0);
+      assertEvents(cal, range(3, 31, true), 2);
+    });
 
-    assertEvents(cal, range(1, 28, true), 2);
+    it("February", function() {
+      cal.goForwardMonth();
+      cal.events(events);
 
-    cal.goForwardMonth();
-    cal.events(events);
+      assertEvents(cal, range(1, 28, true), 2);
+    });
 
-    assertEvents(cal, range(1, 31, true), 2);
+    it("March", function() {
+      cal.goForwardMonth();
+      cal.goForwardMonth();
+      cal.events(events);
+
+      assertEvents(cal, range(1, 31, true), 2);
+    });
   });
 
-  it("recurr ends on spans into upcomming months", function() {
+  describe("recurr ends on spans into upcomming months", function() {
     var event = ef("One", new Date(2014, 0, 3), {
       repeatEndson: new Date(2014, 2, 4),
       repeats: 'daily'
     });
-    cal.events([event]);
-    cal.goForwardMonth();
 
-    assertEvents(cal, range(1, 4, true), 0);
+    it("January", function() {
+      cal.events([event]);
 
-    cal.events([event]);
+      assertEvents(cal, range(1, 2, true), 0);
+      assertEvents(cal, range(3, 31, true), 1);
+    });
 
-    assertEvents(cal, range(1, 28, true), 1);
+    it("February", function() {
+      cal.goForwardMonth();
+      cal.events([event]);
 
-    cal.goForwardMonth();
-    cal.events([event]);
+      assertEvents(cal, range(1, 28, true), 1);
+    });
 
-    assertEvents(cal, range(1, 4, true), 1);
-    assertEvents(cal, 5, 0);
+    it("March", function() {
+      cal.goForwardMonth();
+      cal.goForwardMonth();
+      cal.events([event]);
+
+      assertEvents(cal, range(1, 4, true), 1);
+      assertEvents(cal, 5, 0);
+    });
   });
 
   it("recurr repeat times exeactly the remainder of the month", function() {
@@ -98,25 +115,33 @@ describe('daily recurrence', function() {
     assertEvents(cal, range(3, 30, true), 1);
   });
 
-  it("recurr repeat times spans into upcomming months", function() {
+  describe("recurr repeat times spans into upcomming months", function() {
     var event = ef("One", new Date(2014, 0, 3), {
       repeatTimes: 63,
       repeats: 'daily'
     });
-    cal.events([event]);
 
-    assertEvents(cal, range(3, 30, true), 1);
+    it("January", function() {
+      cal.events([event]);
 
-    cal.goForwardMonth();
-    cal.events([event]);
+      assertEvents(cal, range(3, 30, true), 1);
+    });
 
-    assertEvents(cal, range(1, 28, true), 1);
+    it("February", function() {
+      cal.goForwardMonth();
+      cal.events([event]);
 
-    cal.goForwardMonth();
-    cal.events([event]);
+      assertEvents(cal, range(1, 28, true), 1);
+    });
 
-    assertEvents(cal, range(1, 7, true), 1);
-    assertEvents(cal, 8, 0);
+    it("March", function() {
+      cal.goForwardMonth();
+      cal.goForwardMonth();
+      cal.events([event]);
+
+      assertEvents(cal, range(1, 7, true), 1);
+      assertEvents(cal, 8, 0);
+    });
   });
 });
 

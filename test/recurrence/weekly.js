@@ -52,20 +52,25 @@ describe("weekly recurrence", function() {
     assertEvents(cal, [3, 20, 21, 23], 0);
   });
 
-  it("infinitely", function() {
+  describe("infinitely", function() {
     var event = ef("One", new Date(2014, 0, 7), {
       repeats: 'weekly',
       repeatsOn: ["Monday", "Tuesday", "Thursday"]
     });
-    cal.events([event]);
 
-    assertEvents(cal, [7, 9, 13, 14, 16, 20, 21, 23, 27, 28, 30], 1);
-    assertEvents(cal, [3, 6], 0);
+    it("January", function() {
+      cal.events([event]);
 
-    cal.goForwardMonth();
-    cal.events([event]);
+      assertEvents(cal, [7, 9, 13, 14, 16, 20, 21, 23, 27, 28, 30], 1);
+      assertEvents(cal, [3, 6], 0);
+    });
 
-    assertEvents(cal, [3, 4, 6, 10, 11, 13, 17, 18, 20, 24, 25], 1);
+    it("February", function() {
+      cal.goForwardMonth();
+      cal.events([event]);
+
+      assertEvents(cal, [3, 4, 6, 10, 11, 13, 17, 18, 20, 24, 25], 1);
+    });
   });
 
   describe("recurr ends on spans into upcomming months", function() {
