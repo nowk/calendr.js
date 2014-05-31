@@ -224,34 +224,24 @@
     var i = 0;
     var len = events.length;
     for(; i<len; i++) {
-      var event = events[i];
-      var startson = event.startson.getDate();
-      var _day = self.getDay(startson);
       var dates = [];
+      var event = events[i];
+      var startson = (event.startson.getMonth() < self.moment.month()) ?
+        1 : // event recurrs from the previous month
+        event.startson.getDate();
 
-      // event recurrs from the previous month
-      if (event.startson.getMonth() < self.moment.month()) {
-        startson = 1;
-      }
-
-      if (_day) {
-        switch(event.repeats) {
-          case 'daily':
-            dates = dailyRecurring.call(self, event, startson);
-            break;
-
-          case 'weekly':
-            dates = weeklyRecurring.call(self, event, startson);
-            break;
-
-          default:
-            dates = [startson];
-            break;
+      if (self.getDay(startson)) {
+        if ('daily' === event.repeats) {
+          dates = dailyRecurring.call(self, event, startson);
+        } else if ('weekly' === event.repeats) {
+          dates = weeklyRecurring.call(self, event, startson);
+        } else {
+          dates = [startson];
         }
 
         // iterate through given dates and set events
-        for(var d=0, dlen=dates.length; d<dlen; d++) {
-          var day = self.getDay(dates[d]);
+        for(var a=0, b=dates.length; a<b; a++) {
+          var day = self.getDay(dates[a]);
           if (day) {
             day.events.push(event);
           }
