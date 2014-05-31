@@ -6,6 +6,7 @@ var range = t.range;
 var assertEvents = t.assertEvents;
 var assert = require('chai').assert;
 var Calendr = require('../..');
+var CalendrEvents = require('../../lib/events');
 
 describe('daily recurrence', function() {
   var caldate;

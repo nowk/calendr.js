@@ -5,6 +5,7 @@ var ef = t.eventFactory;
 var assert = require('chai').assert;
 var assertEvents = t.assertEvents;
 var Calendr = require('../..');
+var CalendrEvents = require('../../lib/events');
 
 describe("weekly recurrence", function() {
   var caldate;

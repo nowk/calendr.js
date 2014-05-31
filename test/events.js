@@ -4,6 +4,7 @@ var t = require('./test_helper');
 var ef = t.eventFactory;
 var assert = require('chai').assert;
 var Calendr = require('..');
+var CalendrEvents = require('../lib/events');
 
 describe('events', function() {
   var caldate;
