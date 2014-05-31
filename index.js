@@ -325,8 +325,13 @@
             for(; weeki<weekslen; weeki++) {
               for(var r=0; r<rlen; r++) {
                 var date = repeatsOnIndexes[r]-self.startson;
-                if (weeki > 0) date = date+(weeki*7);
-                if (date < 0) continue;
+                if (weeki > 0) {
+                  date = date+(weeki*7);
+                }
+
+                if (date < 0) {
+                  continue;
+                }
 
                 date++;
 
