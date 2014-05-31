@@ -293,43 +293,50 @@
             break;
 
           case 'weekly':
-            // if repeats on has a day this week, eg starts on friday, repeats on m, t, f
-            // f should be marked, the previous m, t should not
-
+            // /* jshint -W004 */
+            // calculate the weeks we need to repeat
             var weeki = weekIndex.call(self, startson);
-            var weekendi;
-
+            var weekslen = self.grid().length;
             if (!!event.repeatTimes) {
-              weekendi = event.repeatTimes;
-            } else if(!!event.repeatEndson) {
-              weekendi = weekIndex.call(self, event.repeatEndson.getDate());
+              weekslen = weeki+event.repeatTimes; // offset with start week index
+              if (weekslen >= self.grid().length) {
+                var thismonth = self.moment.month();
+                while(thismonth>0) {
+                  var cal = new Calendr(new Date(self.moment.year(), self.moment.month()-thismonth));
+                  weekslen = weekslen-(cal.grid().length-1);
+                  thismonth--;
+                }
+
+                if (weekslen >= self.grid().length) {
+                  weekslen = self.grid().length-1;
+                }
+              }
+              weekslen++; // +1 for for loop
+            } else if (!!event.repeatEndson) {
+              /* jshint -W018 */
+              if (!(event.repeatEndson.getMonth() > self.moment.month())) {
+                weekslen = weekIndex.call(self, event.repeatEndson.getDate())+1;
+              }
             }
 
-            if (weekendi) {
-              weekendi++;
-            } else {
-              weekendi = self.grid().length;
-            }
+            var dates = [];
 
+            // calculate dates days in each week
             var repeatsOnIndexes = event.repeatsOn.map(dayNameIndex);
-            for(; weeki<weekendi; weeki++) {
-              for(var r=0, rlen=repeatsOnIndexes.length; r<rlen; r++) {
-                var dayi = repeatsOnIndexes[r]-self.startson;
+            var rlen = repeatsOnIndexes.length;
+            for(; weeki<weekslen; weeki++) {
+              for(var r=0; r<rlen; r++) {
+                var date = repeatsOnIndexes[r]-self.startson;
+                if (weeki > 0) date = date+(weeki*7);
+                if (date < 0) continue;
+                dates.push(date+1);
+              }
+            }
 
-                if (weeki > 0) {
-                  dayi = dayi+(weeki*7);
-                }
-
-                if (dayi > 0) {
-                  dayi = dayi+1;
-                } else {
-                  continue;
-                }
-
-                var wday = self.getDay(dayi);
-                if (wday) {
-                  wday.events.push(event);
-                }
+            for(var d=0, dlen=dates.length; d<dlen; d++) {
+              var day = self.getDay(dates[d]);
+              if (day) {
+                day.events.push(event);
               }
             }
             break;
