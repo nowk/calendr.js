@@ -117,14 +117,14 @@ describe('daily recurrence', function() {
 
   describe("recurr repeat times spans into upcomming months", function() {
     var event = ef("One", new Date(2014, 0, 3), {
-      repeatTimes: 63,
+      repeatTimes: 62,
       repeats: 'daily'
     });
 
     it("January", function() {
       cal.events([event]);
 
-      assertEvents(cal, range(3, 30, true), 1);
+      assertEvents(cal, range(3, 31, true), 1);
     });
 
     it("February", function() {
@@ -139,8 +139,40 @@ describe('daily recurrence', function() {
       cal.goForwardMonth();
       cal.events([event]);
 
-      assertEvents(cal, range(1, 7, true), 1);
-      assertEvents(cal, 8, 0);
+      assertEvents(cal, range(1, 6, true), 1);
+      assertEvents(cal, 7, 0);
+    });
+  });
+
+  describe("recurr repeat times spans into upcomming months - 2", function() {
+    var event = ef("One", new Date(2014, 1, 3), {
+      repeatTimes: 62,
+      repeats: 'daily'
+    });
+
+    it("February", function() {
+      cal.goForwardMonth();
+      cal.events([event]);
+
+      assertEvents(cal, range(3, 28, true), 1);
+    });
+
+    it("March", function() {
+      cal.goForwardMonth();
+      cal.goForwardMonth();
+      cal.events([event]);
+
+      assertEvents(cal, range(1, 31, true), 1);
+    });
+
+    it("April", function() {
+      cal.goForwardMonth();
+      cal.goForwardMonth();
+      cal.goForwardMonth();
+      cal.events([event]);
+
+      assertEvents(cal, range(1, 6, true), 1);
+      assertEvents(cal, 7, 0);
     });
   });
 });

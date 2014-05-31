@@ -253,43 +253,7 @@
       if (_day) {
         switch(event.repeats) {
           case 'daily':
-            var endson = self.numofdays;
-
-            if (!!event.repeatTimes) {
-              endson = event.repeatTimes;
-
-              // repeat times outside of number days left in the month
-              if (event.repeatTimes >= self.numofdays-startson) {
-
-                // subtract # of days in previous months
-                var diff = endson;
-                var m = event.startson.getMonth();
-                var thismonth = self.moment.month();
-                for(; m<thismonth; m++) {
-                  var numofdays = new Date(self.moment.year(), m+1, 0).getDate();
-                  diff = diff-numofdays;
-                }
-
-                // we still have more repeating days than month days
-                if (diff > self.numofdays) {
-                  endson = self.numofdays;
-                } else {
-                  endson = diff+event.startson.getDate(); // add startson date as offset
-                }
-              }
-            } else if (!!event.repeatEndson) {
-              if (event.repeatEndson.getMonth() > self.moment.month()) {
-                endson = self.numofdays;
-              } else {
-                endson = event.repeatEndson.getDate();
-              }
-            }
-
-            endson++; // add +1 for for loop
-
-            for(; startson<endson; startson++) {
-              dates.push(startson);
-            }
+            dates = dailyRecurring.call(self, event, startson);
             break;
 
           case 'weekly':
@@ -441,6 +405,53 @@
     for(; i<len; i++) {
       week.push(day.call(self, (i+1), month));
     }
+  }
+
+
+  /*
+   * daily recurring events
+   *
+   * @param {Object} event
+   * @param {Number} startson
+   * @return {Array}
+   * @api private
+   */
+
+  function dailyRecurring(event, startson) {
+    var dates = [];
+    var date = startson;
+    var daylen = this.numofdays+1; // dates are 1 indexed
+
+    if (!!event.repeatTimes) {
+      daylen = date+event.repeatTimes;
+
+      if (daylen >= this.numofdays) {
+        var self = this;
+        var thismonth = this.moment.month();
+        while(thismonth>event.startson.getMonth()) {
+          var numofdays = new Date(self.moment.year(), thismonth, 0).getDate();
+          daylen = daylen-(numofdays-1);
+          thismonth--;
+        }
+
+        if (daylen >= this.numofdays) {
+          daylen = this.numofdays;
+        }
+
+        daylen++;
+      }
+    }
+
+    for(; date<daylen; date++) {
+      if (event.repeatEndson &&
+        event.repeatEndson.getMonth() === this.moment.month()) {
+        if (date > event.repeatEndson.getDate()) continue;
+      }
+
+      dates.push(date);
+    }
+
+    return dates;
   }
 
 
