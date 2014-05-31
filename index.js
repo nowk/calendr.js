@@ -347,36 +347,41 @@
 
   function dailyRecurring(event, startson) {
     var dates = [];
-    var date = startson;
-    var daylen = this.numofdays+1; // dates are 1 indexed
+    var i = event.startson.getDate();
+    var len;
+
+    if (this.moment.month() > event.startson.getMonth()) {
+      i = 1;
+    }
 
     if (!!event.repeatTimes) {
-      daylen = date+event.repeatTimes;
+      len = i+event.repeatTimes-1;
 
-      if (daylen >= this.numofdays) {
+      if (len > this.numofdays) {
         var self = this;
         var thismonth = this.moment.month();
         while(thismonth>event.startson.getMonth()) {
           var numofdays = new Date(self.moment.year(), thismonth, 0).getDate();
-          daylen = daylen-(numofdays-1);
+          len = len-(numofdays-1);
           thismonth--;
         }
 
-        if (daylen >= this.numofdays) {
-          daylen = this.numofdays;
+        if (len > this.numofdays) {
+          len = this.numofdays;
         }
 
-        daylen++;
+        len++;
       }
+    } else if(!!event.repeatEndson &&
+      event.repeatEndson.getMonth() === this.moment.month()) {
+
+      len = event.repeatEndson.getDate();
+    } else {
+      len = this.numofdays+1;
     }
 
-    for(; date<daylen; date++) {
-      if (event.repeatEndson &&
-        event.repeatEndson.getMonth() === this.moment.month()) {
-        if (date > event.repeatEndson.getDate()) continue;
-      }
-
-      dates.push(date);
+    for(; i<=len; i++) {
+      dates.push(i);
     }
 
     return dates;
