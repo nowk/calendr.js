@@ -257,62 +257,7 @@
             break;
 
           case 'weekly':
-            // /* jshint -W004 */
-            // calculate the weeks we need to repeat
-            var weeki = weekIndex.call(self, startson);
-            var weekslen = self.grid().length;
-            if (!!event.repeatTimes) {
-              weekslen = weeki+event.repeatTimes; // offset with start week index
-              if (weekslen >= self.grid().length) {
-                var thismonth = self.moment.month();
-                while(thismonth>0) {
-                  var cal = new Calendr(new Date(self.moment.year(), self.moment.month()-thismonth));
-                  weekslen = weekslen-(cal.grid().length-1);
-                  thismonth--;
-                }
-
-                if (weekslen >= self.grid().length) {
-                  weekslen = self.grid().length-1;
-                }
-              }
-              weekslen++; // +1 for for loop
-            } else if (!!event.repeatEndson) {
-              /* jshint -W018 */
-              if (!(event.repeatEndson.getMonth() > self.moment.month())) {
-                weekslen = weekIndex.call(self, event.repeatEndson.getDate())+1;
-              }
-            }
-
-            // calculate dates days in each week
-            var repeatsOnIndexes = event.repeatsOn.map(dayNameIndex);
-            var rlen = repeatsOnIndexes.length;
-            for(; weeki<weekslen; weeki++) {
-              for(var r=0; r<rlen; r++) {
-                var date = repeatsOnIndexes[r]-self.startson;
-                if (weeki > 0) {
-                  date = date+(weeki*7);
-                }
-
-                if (date < 0) {
-                  continue;
-                }
-
-                date++;
-
-                // remove dates previous to the start date
-                if (event.startson.getMonth() === self.moment.month()) {
-                  if (date < event.startson.getDate()) continue;
-                }
-
-                // remove dates after to the repeate ends on date
-                if (event.repeatEndson &&
-                  event.repeatEndson.getMonth() === self.moment.month()) {
-                  if (date > event.repeatEndson.getDate()) continue;
-                }
-
-                dates.push(date);
-              }
-            }
+            dates = weeklyRecurring.call(self, event, startson);
             break;
 
           default:
@@ -449,6 +394,77 @@
       }
 
       dates.push(date);
+    }
+
+    return dates;
+  }
+
+  /*
+   * weekly recurring events
+   *
+   * @param {Object} event
+   * @param {Number} startson
+   * @return {Array}
+   * @api private
+   */
+
+  function weeklyRecurring(event, startson) {
+    var dates = [];
+    var weeki = weekIndex.call(this, startson);
+    var weekslen = this.grid().length;
+
+    if (!!event.repeatTimes) {
+      weekslen = weeki+event.repeatTimes; // offset with start week index
+
+      if (weekslen >= this.grid().length) {
+        var self = this;
+        var thismonth = this.moment.month();
+        while(thismonth>event.startson.getMonth()) {
+          var m = new Date(self.moment.year(), self.moment.month()-thismonth);
+          var cal = new Calendr(m);
+          weekslen = weekslen-(cal.grid().length-1);
+          thismonth--;
+        }
+
+        if (weekslen >= self.grid().length) {
+          weekslen = self.grid().length-1;
+        }
+      }
+      weekslen++;
+    } else if (!!event.repeatEndson && /* jshint -W018 */
+      !(event.repeatEndson.getMonth() > this.moment.month())) {
+      weekslen = weekIndex.call(this, event.repeatEndson.getDate())+1;
+    }
+
+    // calculate dates days in each week
+    var repeatsOnIndexes = event.repeatsOn.map(dayNameIndex);
+    var rlen = repeatsOnIndexes.length;
+    for(; weeki<weekslen; weeki++) {
+      for(var r=0; r<rlen; r++) {
+        var date = repeatsOnIndexes[r]-this.startson;
+        if (weeki > 0) {
+          date = date+(weeki*7);
+        }
+
+        if (date < 0) {
+          continue;
+        }
+
+        date++;
+
+        // remove dates previous to the start date
+        if (event.startson.getMonth() === this.moment.month()) {
+          if (date < event.startson.getDate()) continue;
+        }
+
+        // remove dates after to the repeate ends on date
+        if (event.repeatEndson &&
+          event.repeatEndson.getMonth() === this.moment.month()) {
+          if (date > event.repeatEndson.getDate()) continue;
+        }
+
+        dates.push(date);
+      }
     }
 
     return dates;
