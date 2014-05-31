@@ -17,14 +17,14 @@ describe("weekly recurrence", function() {
 
   it("recurrs to  a given ends on date", function() {
     var event = ef("One", new Date(2014, 0, 2), {
-      repeatEndson: new Date(2014, 0, 10),
+      repeatEndson: new Date(2014, 0, 15),
       repeats: 'weekly',
       repeatsOn: ["Monday", "Tuesday", "Thursday"]
     });
     cal.events([event]);
 
-    assertEvents(cal, [2, 6, 7, 9], 1);
-    assertEvents(cal, [13, 14, 16], 0);
+    assertEvents(cal, [2, 6, 7, 9, 13, 14], 1);
+    assertEvents(cal, [16], 0);
   });
 
   it("recurrs a number of times", function() {
@@ -87,8 +87,8 @@ describe("weekly recurrence", function() {
     cal.goForwardMonth();
     cal.events([event]);
 
-    assertEvents(cal, [3, 4, 6], 1);
-    assertEvents(cal, [/* TODO 6, */10, 11, 13], 0);
+    assertEvents(cal, [3, 4], 1);
+    assertEvents(cal, [6, 10, 11, 13], 0);
   });
 
   it("recurr repeat times exeactly the remainder of the month", function() {

@@ -336,6 +336,11 @@
                   if (date < event.startson.getDate()) continue;
                 }
 
+                if (event.repeatEndson &&
+                  event.repeatEndson.getMonth() === self.moment.month()) {
+                  if (date > event.repeatEndson.getDate()) continue;
+                }
+
                 dates.push(date);
               }
             }
