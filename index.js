@@ -182,7 +182,7 @@
 
   Calendr.prototype.getDay = function(date) {
     var dayi = (date-1)+this.startson; // offset with the actual start on index
-    var weeki = weekIndex.call(this, date);
+    var weeki = Math.floor(dayi/7);
 
     // get the dayi offset if not in the first week
     if (weeki > 0) {
@@ -286,19 +286,6 @@
 
   function dayNameIndex(dayName) {
     return days.indexOf(dayName);
-  }
-
-  /*
-   * return the week index of give date
-   *
-   * @param {Number} date
-   * @return {Number}
-   * @api private
-   */
-
-  function weekIndex(date) {
-    var dayi = (date-1)+this.startson; // offset with the actual start on index
-    return Math.floor(dayi/7);
   }
 
   /*
@@ -409,41 +396,38 @@
    */
 
   function weeklyRecurring(event, startson) {
+    var self = this;
     var dates = [];
-    var weeki = weekIndex.call(this, startson);
-    var weekslen = this.grid().length;
+    var offset = indexOfWeek(event.startson);
+    var i = offset;
+    var len;
 
     if (!!event.repeatTimes) {
-      weekslen = weeki+event.repeatTimes; // offset with start week index
+      len = offset+event.repeatTimes-1;
 
-      if (weekslen >= this.grid().length) {
-        var self = this;
-        var thismonth = this.moment.month();
-        while(thismonth>event.startson.getMonth()) {
-          var m = new Date(self.moment.year(), self.moment.month()-thismonth);
-          var cal = new Calendr(m);
-          weekslen = weekslen-(cal.grid().length-1);
-          thismonth--;
-        }
-
-        if (weekslen >= self.grid().length) {
-          weekslen = self.grid().length-1;
-        }
+      var thismonth = this.moment.month();
+      while(thismonth>event.startson.getMonth()) {
+        i = 0;
+        var m = new Date(self.moment.year(), self.moment.month()-thismonth);
+        len = len-(numberOfWeeks(m)-1);
+        thismonth--;
       }
-      weekslen++;
-    } else if (!!event.repeatEndson && /* jshint -W018 */
-      !(event.repeatEndson.getMonth() > this.moment.month())) {
-      weekslen = weekIndex.call(this, event.repeatEndson.getDate())+1;
+    } else if (!!event.repeatEndson &&
+      event.repeatEndson.getMonth() === this.moment.month()) {
+
+      len = indexOfWeek(event.repeatEndson);
+    } else {
+      len = this.grid().length-1;
     }
 
-    // calculate dates days in each week
-    var repeatsOnIndexes = event.repeatsOn.map(dayNameIndex);
-    var rlen = repeatsOnIndexes.length;
-    for(; weeki<weekslen; weeki++) {
-      for(var r=0; r<rlen; r++) {
-        var date = repeatsOnIndexes[r]-this.startson;
-        if (weeki > 0) {
-          date = date+(weeki*7);
+    var repeatsOn = event.repeatsOn.map(dayNameIndex);
+    var r = repeatsOn.length;
+    for(; i<=len; i++) {
+      var p = 0;
+      for(; p<r; p++) {
+        var date = repeatsOn[p]-self.startson;
+        if (i > 0) {
+          date = date+(i*7);
         }
 
         if (date < 0) {
@@ -453,13 +437,13 @@
         date++;
 
         // remove dates previous to the start date
-        if (event.startson.getMonth() === this.moment.month()) {
+        if (event.startson.getMonth() === self.moment.month()) {
           if (date < event.startson.getDate()) continue;
         }
 
         // remove dates after to the repeate ends on date
         if (event.repeatEndson &&
-          event.repeatEndson.getMonth() === this.moment.month()) {
+          event.repeatEndson.getMonth() === self.moment.month()) {
           if (date > event.repeatEndson.getDate()) continue;
         }
 
@@ -468,6 +452,34 @@
     }
 
     return dates;
+  }
+
+  /*
+   * return index of week from date
+   *
+   * @param {Date} date
+   * @return {Number}
+   * @api private
+   */
+
+  function indexOfWeek(date) {
+    date = moment(date);
+    var month = moment(new Date(date.year(), date.month(), 1));
+    return Math.floor(((date.date()-1)+month.day())/7);
+  }
+
+  /*
+   * return number of weeks in date month
+   *
+   * @param {Date} date
+   * @return {Number}
+   * @api private
+   */
+
+  function numberOfWeeks(date) {
+    date = moment(date);
+    var month = moment(new Date(date.year(), date.month(), 1));
+    return Math.ceil((month.day()+month.daysInMonth())/7);
   }
 
 

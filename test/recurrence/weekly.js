@@ -35,8 +35,8 @@ describe("weekly recurrence", function() {
     });
     cal.events([event]);
 
-    assertEvents(cal, [6, 7, 9, 13, 14, 16], 1);
-    assertEvents(cal, [3, 20, 21, 23], 0);
+    assertEvents(cal, [6, 7, 9], 1);
+    assertEvents(cal, [3, 13, 14, 16], 0);
   });
 
   it("will use number of recurrs over ends on date if both are given", function() {
@@ -48,8 +48,8 @@ describe("weekly recurrence", function() {
     });
     cal.events([event]);
 
-    assertEvents(cal, [6, 7, 9, 13, 14, 16], 1);
-    assertEvents(cal, [3, 20, 21, 23], 0);
+    assertEvents(cal, [6, 7, 9], 1);
+    assertEvents(cal, [3, 13, 14, 16], 0);
   });
 
   describe("infinitely", function() {
