@@ -369,7 +369,7 @@
           len = cal.numofdays;
         }
 
-        len++;
+        len++; // days are 1 indexed
       }
     } else if(!!event.repeatEndson &&
       event.repeatEndson.getMonth() === cal.moment.month()) {
