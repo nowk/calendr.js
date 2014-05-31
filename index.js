@@ -332,10 +332,12 @@
 
                 date++;
 
+                // remove dates previous to the start date
                 if (event.startson.getMonth() === self.moment.month()) {
                   if (date < event.startson.getDate()) continue;
                 }
 
+                // remove dates after to the repeate ends on date
                 if (event.repeatEndson &&
                   event.repeatEndson.getMonth() === self.moment.month()) {
                   if (date > event.repeatEndson.getDate()) continue;
