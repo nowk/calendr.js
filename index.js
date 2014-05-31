@@ -242,14 +242,15 @@
     for(; i<len; i++) {
       var event = events[i];
       var startson = event.startson.getDate();
-      var day = self.getDay(startson);
+      var _day = self.getDay(startson);
+      var dates = [];
 
       // event recurrs from the previous month
       if (event.startson.getMonth() < self.moment.month()) {
         startson = 1;
       }
 
-      if (day) {
+      if (_day) {
         switch(event.repeats) {
           case 'daily':
             var endson = self.numofdays;
@@ -287,8 +288,7 @@
             endson++; // add +1 for for loop
 
             for(; startson<endson; startson++) {
-              var _daily = self.getDay(startson);
-              _daily.events.push(event);
+              dates.push(startson);
             }
             break;
 
@@ -319,8 +319,6 @@
               }
             }
 
-            var dates = [];
-
             // calculate dates days in each week
             var repeatsOnIndexes = event.repeatsOn.map(dayNameIndex);
             var rlen = repeatsOnIndexes.length;
@@ -346,18 +344,19 @@
                 dates.push(date);
               }
             }
-
-            for(var d=0, dlen=dates.length; d<dlen; d++) {
-              var day = self.getDay(dates[d]);
-              if (day) {
-                day.events.push(event);
-              }
-            }
             break;
 
           default:
-            day.events.push(event);
+            dates = [startson];
             break;
+        }
+
+        // iterate through given dates and set events
+        for(var d=0, dlen=dates.length; d<dlen; d++) {
+          var day = self.getDay(dates[d]);
+          if (day) {
+            day.events.push(event);
+          }
         }
       }
     }
