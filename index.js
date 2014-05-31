@@ -234,7 +234,7 @@
         if ('daily' === event.repeats) {
           dates = dailyRecurring.call(self, event, startson);
         } else if ('weekly' === event.repeats) {
-          dates = weeklyRecurring.call(self, event, startson);
+          dates = weeklyRecurring(self, event);
         } else {
           dates = [startson];
         }
@@ -385,14 +385,13 @@
   /*
    * weekly recurring events
    *
+   * @param {Calendr} cal
    * @param {Object} event
-   * @param {Number} startson
    * @return {Array}
    * @api private
    */
 
-  function weeklyRecurring(event, startson) {
-    var self = this;
+  function weeklyRecurring(cal, event) {
     var dates = [];
     var offset = indexOfWeek(event.startson);
     var i = offset;
@@ -401,19 +400,19 @@
     if (!!event.repeatTimes) {
       len = offset+event.repeatTimes-1;
 
-      var thismonth = this.moment.month();
+      var thismonth = cal.moment.month();
       while(thismonth>event.startson.getMonth()) {
         i = 0;
-        var m = new Date(self.moment.year(), self.moment.month()-thismonth);
+        var m = new Date(cal.moment.year(), cal.moment.month()-thismonth);
         len = len-(numberOfWeeks(m)-1);
         thismonth--;
       }
     } else if (!!event.repeatEndson &&
-      event.repeatEndson.getMonth() === this.moment.month()) {
+      event.repeatEndson.getMonth() === cal.moment.month()) {
 
       len = indexOfWeek(event.repeatEndson);
     } else {
-      len = this.grid().length-1;
+      len = cal.grid().length-1;
     }
 
     var repeatsOn = event.repeatsOn.map(dayNameIndex);
@@ -421,7 +420,7 @@
     for(; i<=len; i++) {
       var p = 0;
       for(; p<r; p++) {
-        var date = repeatsOn[p]-self.startson;
+        var date = repeatsOn[p]-cal.startson;
         if (i > 0) {
           date = date+(i*7);
         }
@@ -433,13 +432,13 @@
         date++;
 
         // remove dates previous to the start date
-        if (event.startson.getMonth() === self.moment.month()) {
+        if (event.startson.getMonth() === cal.moment.month()) {
           if (date < event.startson.getDate()) continue;
         }
 
         // remove dates after to the repeate ends on date
         if (event.repeatEndson &&
-          event.repeatEndson.getMonth() === self.moment.month()) {
+          event.repeatEndson.getMonth() === cal.moment.month()) {
           if (date > event.repeatEndson.getDate()) continue;
         }
 
