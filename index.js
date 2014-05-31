@@ -232,7 +232,7 @@
 
       if (self.getDay(startson)) {
         if ('daily' === event.repeats) {
-          dates = dailyRecurring.call(self, event, startson);
+          dates = dailyRecurring(self, event);
         } else if ('weekly' === event.repeats) {
           dates = weeklyRecurring(self, event);
         } else {
@@ -339,45 +339,44 @@
   /*
    * daily recurring events
    *
+   * @param {Calendr} cal
    * @param {Object} event
-   * @param {Number} startson
    * @return {Array}
    * @api private
    */
 
-  function dailyRecurring(event, startson) {
+  function dailyRecurring(cal, event) {
     var dates = [];
     var i = event.startson.getDate();
     var len;
 
-    if (this.moment.month() > event.startson.getMonth()) {
+    if (cal.moment.month() > event.startson.getMonth()) {
       i = 1;
     }
 
     if (!!event.repeatTimes) {
       len = i+event.repeatTimes-1;
 
-      if (len > this.numofdays) {
-        var self = this;
-        var thismonth = this.moment.month();
+      if (len > cal.numofdays) {
+        var thismonth = cal.moment.month();
         while(thismonth>event.startson.getMonth()) {
-          var numofdays = new Date(self.moment.year(), thismonth, 0).getDate();
+          var numofdays = new Date(cal.moment.year(), thismonth, 0).getDate();
           len = len-(numofdays-1);
           thismonth--;
         }
 
-        if (len > this.numofdays) {
-          len = this.numofdays;
+        if (len > cal.numofdays) {
+          len = cal.numofdays;
         }
 
         len++;
       }
     } else if(!!event.repeatEndson &&
-      event.repeatEndson.getMonth() === this.moment.month()) {
+      event.repeatEndson.getMonth() === cal.moment.month()) {
 
       len = event.repeatEndson.getDate();
     } else {
-      len = this.numofdays+1;
+      len = cal.numofdays+1;
     }
 
     for(; i<=len; i++) {
