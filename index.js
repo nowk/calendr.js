@@ -1,21 +1,5 @@
 ;(function() {
   var moment;
-
-  /*
-   * expose Calendr
-   */
-
-  if ('undefined' !== typeof module && 'undefined' !== typeof module.exports) {
-    moment = require('moment');
-    exports = module.exports = Calendr;
-  } else {
-    if (!('moment' in window)) {
-      return console.error('Moment.js is required');
-    }
-    moment = window.moment;
-    window.Calendr = Calendr;
-  }
-
   /*
    * days in english
    */
@@ -29,12 +13,6 @@
     'Friday',
     'Saturday'
   ];
-
-  /*
-   * expose days
-   */
-
-  exports.days = days;
 
   /*
    * months in english
@@ -251,12 +229,6 @@
 
 
   /*
-   * expose Day
-   */
-
-  exports.Day = Day;
-
-  /*
    * Day object
    *
    * @constructor
@@ -360,6 +332,24 @@
     } else {
       return date;
     }
+  }
+
+
+  /*
+   * expose Calendr
+   */
+
+  if ('undefined' !== typeof module && 'undefined' !== typeof module.exports) {
+    moment = require('moment');
+    exports = module.exports = Calendr;
+    exports.Day = Day;
+    exports.days = days;
+  } else {
+    if (!('moment' in window)) {
+      return console.error('Moment.js is required');
+    }
+    moment = window.moment;
+    window.Calendr = Calendr;
   }
 })();
 
