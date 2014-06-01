@@ -75,11 +75,24 @@
   /*
    * return the name of the month
    *
+   * @param {String} direction
+   * @return {String}
    * @api public
    */
 
-  Calendr.prototype.nameOfMonth = function() {
-    return months[this.moment.month()];
+  Calendr.prototype.nameOfMonth = function(direction) {
+    var offset = 0;
+    if ('previous' === direction) {
+      offset = -1;
+    } else if ('next' === direction) {
+      offset = 1;
+    }
+
+    var index = this.moment.month()+offset;
+    if (index < 0) index = 12+index;
+    if (index > 11) index = 12-index;
+
+    return months[index];
   };
 
   /*

@@ -61,6 +61,16 @@ describe("Calendr", function() {
     assert.equal(maycal.nameOfMonth(), 'May');
   });
 
+  it.only("returns the name of previous/next months", function() {
+    var jancal = new Calendr(new Date(2014, 0));
+    var deccal = new Calendr(new Date(2014, 11));
+
+    assert.equal(jancal.nameOfMonth('previous'), 'December');
+    assert.equal(jancal.nameOfMonth('next'), 'February');
+    assert.equal(deccal.nameOfMonth('previous'), 'November');
+    assert.equal(deccal.nameOfMonth('next'), 'January');
+  });
+
   it("can move forward and backward by month", function() {
     var april = new Date(2014, 3);
     var cal = new Calendr(april);
