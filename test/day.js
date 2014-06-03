@@ -7,8 +7,8 @@ var Day = require('..').Day;
 describe("Day", function() {
   it("returns the configured Date", function() {
     var day = new Day(2014, 5, 27);
-    var a = day.toDate().getTime();
-    var b = new Date(2014, 4, 27).getTime();
+    var a = parseInt(day.moment.unix()/100, 10);
+    var b = parseInt(new Date(2014, 4, 27).getTime()/100000, 10);
     assert.equal(a, b);
   });
 

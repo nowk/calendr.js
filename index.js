@@ -42,13 +42,10 @@
    */
 
   function Calendr(date, opts) {
-    this._date = date; // save the original date
-    this.moment = moment(this._date);
-
     opts = opts || {};
     this.auto = opts.auto || false;
     this.dayObjects = opts.dayObjects || false;
-
+    this.moment = moment(date);
     this.build();
   }
 
@@ -62,8 +59,8 @@
     this.year = this.moment.year();
     this.month = this.moment.month()+1; // month is 0 indexed
     this.numofdays = this.moment.daysInMonth();
-    this.startson = moment(this.year+'-'+this.month, 'YYYY-MM').day();
-    this.endson = moment(this.year+'-'+this.month+'-'+this.numofdays, 'YYYY-MM-DD').day();
+    this.startson = moment(new Date(this.year, this.month-1, 1)).day();
+    this.endson = moment(new Date(this.year, this.month-1, this.numofdays)).day();
 
     if (this.auto) {
       this._grid = this.slice();
@@ -214,7 +211,7 @@
 
   function prepad(days) {
     var self = this;
-    var month = moment(new Date(this.moment)).subtract('month', 1);
+    var month = moment(this.moment).subtract('month', 1);
     var numofdayslastmonth = month.daysInMonth();
     var i = 0;
     var index = this.startson;
@@ -232,7 +229,7 @@
 
   function fill(week) {
     var self = this;
-    var month = moment(new Date(this.moment)).add('month', 1);
+    var month = moment(this.moment).add('month', 1);
     var i = 0;
     var len = 7-week.length;
     for(; i<len; i++) {
@@ -248,19 +245,9 @@
    */
 
   function Day(year, month, date) {
-    this._toDate = new Date(year, month-1, date);
+    this.moment = moment(new Date(year, month-1, date));
     this.events = [];
   }
-
-  /*
-   * toDate
-   *
-   * @return {Date}
-   */
-
-  Day.prototype.toDate = function() {
-    return this._toDate;
-  };
 
   /*
    * date
@@ -270,7 +257,7 @@
    */
 
   Day.prototype.date = function() {
-    return this._toDate.getDate();
+    return this.moment.date();
   };
 
   /*
@@ -281,7 +268,7 @@
    */
 
   Day.prototype.month = function() {
-    return this._toDate.getMonth()+1; // 1 indexed
+    return this.moment.month()+1; // 1 indexed
   };
 
   /*
@@ -292,7 +279,7 @@
    */
 
   Day.prototype.year = function() {
-    return this._toDate.getFullYear();
+    return this.moment.year();
   };
 
   /*
@@ -303,7 +290,7 @@
    */
 
   Day.prototype.dayOfWeek = function() {
-    return days[moment(this._toDate).day()];
+    return days[this.moment.day()];
   };
 
   /*
@@ -325,9 +312,9 @@
    */
 
   Day.prototype.isToday = function() {
-    var now = new Date();
-    return this._toDate.getTime() ===
-      new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    var thisday = parseInt(this.moment.unix()/100, 10); // seconds
+    var now = parseInt(Date.now()/100000, 10);          // milliseconds
+    return thisday === now;
   };
 
   /*
