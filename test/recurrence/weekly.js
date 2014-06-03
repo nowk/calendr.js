@@ -127,6 +127,27 @@ describe("weekly recurrence", function() {
     assertEvents(cal, [4, 5, 11, 12, 18, 19, 25, 26], 1);
   });
 
+  it("FIX repeat times does not display events in months it does not span into", function() {
+    var event = ef("One", '2014-06-02T17:00:00-07:00', {
+      repeats: 'weekly',
+      repeatTimes: 2,
+      repeatsOn: ["monday", "tuesday"]
+    });
+    cal.events([event]);
+
+    assertEvents(cal, range(1, 31, true), 0);
+
+    cal = new Calendr(new Date(2014, 5, 1), {dayObjects: true});
+    cal.events([event]);
+
+    assertEvents(cal, [2, 3, 9, 10], 1);
+
+    cal.goForwardMonth();
+    cal.events([event]);
+
+    assertEvents(cal, range(1, 31, true), 0);
+  });
+
   it("padding days for the next month should not have events", function() {
     var event = ef("One", '2014-06-02T16:00:00-07:00', {
       repeats: 'weekly',

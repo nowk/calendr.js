@@ -176,5 +176,26 @@ describe('daily recurrence', function() {
       assertEvents(cal, 7, 0);
     });
   });
+
+  it("FIX repeat times does not display events in months it does not span into", function() {
+    var event = ef("One", '2014-06-02T17:00:00-07:00', {
+      repeats: 'daily',
+      repeatTimes: 2,
+    });
+    cal.events([event]);
+
+    assertEvents(cal, range(1, 31, true), 0);
+
+    cal = new Calendr(new Date(2014, 5, 1), {dayObjects: true});
+    cal.events([event]);
+
+    assertEvents(cal, [2, 3], 1);
+    // assertEvents(cal, range(4, 30, true), 0);
+
+    cal.goForwardMonth();
+    cal.events([event]);
+
+    assertEvents(cal, range(1, 31, true), 0);
+  });
 });
 
