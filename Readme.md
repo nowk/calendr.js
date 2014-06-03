@@ -44,9 +44,10 @@ or
     day.month()      // the month eg. 2 (this is 1 index)
     day.year()       // the full year eg. 2014
     day.isToday()    // returns Boolean based on whether this `Day` is today
-    day.toDate()     // returns the day's date as a Date object
-    day.dayOfWeek()  // the name of the day of the week, eg. Monday, Tuesday, etc...
-    day.dayOfMonth() // the name of the day of the month, eg. January, February, etc...
+    day.name()       // the name of the day of the week, eg. Monday, Tuesday, etc...
+    day.monthName()  // the name of the day of the month, eg. January, February, etc...
+
+    day.moment       // returns the day's date as a Moment.js object
 
 # License
 
