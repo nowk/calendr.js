@@ -56,17 +56,37 @@
    */
 
   Calendr.prototype.build = function() {
-    this.year = this.moment.year();
-    this.month = this.moment.month()+1; // month is 0 indexed
-    this.numofdays = this.moment.daysInMonth();
-    this.startson = moment(new Date(this.year, this.month-1, 1)).day();
-    this.endson = moment(new Date(this.year, this.month-1, this.numofdays)).day();
+    var base = [this.moment.year(), this.moment.month()];
+    this.i = moment(base.concat([1])).day();
+    this.len = moment(base.concat([this.moment.daysInMonth()])).day();
 
     if (this.auto) {
       this._grid = this.slice();
     } else {
       delete this._grid; // remove the defined _grid on each build; re-set on next grid call
     }
+  };
+
+  /*
+   * return calendar month (1 indexed)
+   *
+   * @return {Number}
+   * @api public
+   */
+
+  Calendr.prototype.month = function() {
+    return this.moment.month()+1;
+  };
+
+  /*
+   * return calendar year
+   *
+   * @return {Number}
+   * @api public
+   */
+
+  Calendr.prototype.year = function() {
+    return this.moment.year();
   };
 
   /*
@@ -159,7 +179,7 @@
     var t = new Date();
 
     // return if it's not the same month as now
-    if (this.month !== t.getMonth()+1 || this.year !== t.getFullYear()) {
+    if (this.month() !== t.getMonth()+1 || this.year() !== t.getFullYear()) {
       return;
     }
 
@@ -175,7 +195,7 @@
    */
 
   Calendr.prototype.getDay = function(date) {
-    var dayi = (date-1)+this.startson; // offset with the actual start on index
+    var dayi = (date-1)+this.moment.day(); // offset with the actual start on index
     var weeki = Math.floor(dayi/7);
 
     // get the dayi offset if not in the first week
@@ -196,7 +216,7 @@
   function calendardays() {
     var self = this;
     var month = this.moment;
-    var days = Array.apply(null, Array(this.numofdays));
+    var days = Array.apply(null, Array(this.moment.daysInMonth()));
     return days.map(function(d, i) {
       return day.call(self, (i+1), month);
     });
@@ -214,7 +234,7 @@
     var month = moment(this.moment).subtract('month', 1);
     var numofdayslastmonth = month.daysInMonth();
     var i = 0;
-    var index = this.startson;
+    var index = this.moment.day();
     for(; i<index; i++) {
       days.splice(0, 0, day.call(self, (numofdayslastmonth-i), month));
     }
@@ -261,14 +281,14 @@
   };
 
   /*
-   * month
+   * month (1 indexed)
    *
    * @return {Number}
    * @api public
    */
 
   Day.prototype.month = function() {
-    return this.moment.month()+1; // 1 indexed
+    return this.moment.month()+1;
   };
 
   /*
