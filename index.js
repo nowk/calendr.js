@@ -231,12 +231,11 @@
 
   function prepad(days) {
     var self = this;
-    var month = moment(this.moment).subtract('month', 1);
-    var numofdayslastmonth = month.daysInMonth();
+    var prevmonth = moment(this.moment).subtract('month', 1);
     var i = 0;
     var index = this.moment.day();
     for(; i<index; i++) {
-      days.splice(0, 0, day.call(self, (numofdayslastmonth-i), month));
+      days.splice(0, 0, day.call(self, (prevmonth.daysInMonth()-i), prevmonth));
     }
   }
 
@@ -249,11 +248,11 @@
 
   function fill(week) {
     var self = this;
-    var month = moment(this.moment).add('month', 1);
+    var nextmonth = moment(this.moment).add('month', 1);
     var i = 0;
     var len = 7-week.length;
     for(; i<len; i++) {
-      week.push(day.call(self, (i+1), month));
+      week.push(day.call(self, (i+1), nextmonth));
     }
   }
 
