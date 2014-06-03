@@ -177,6 +177,16 @@ describe('daily recurrence', function() {
     });
   });
 
+  it("FIX repeat ends on same month, but different year", function() {
+    var event = ef("One", '2014-01-02T16:00:00-07:00', {
+      repeats: 'daily',
+      repeatEndson: '2015-01-02T00:00:00-07:00'
+    });
+    cal.events([event]);
+
+    assertEvents(cal, range(2, 31, true), 1);
+  });
+
   it("FIX repeat times does not display events in months it does not span into", function() {
     var event = ef("One", '2014-06-02T17:00:00-07:00', {
       repeats: 'daily',
