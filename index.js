@@ -215,10 +215,9 @@
 
   function calendardays() {
     var self = this;
-    var month = this.moment;
     var days = Array.apply(null, Array(this.moment.daysInMonth()));
     return days.map(function(d, i) {
-      return day.call(self, (i+1), month);
+      return day.call(self, (i+1), self.moment);
     });
   }
 
