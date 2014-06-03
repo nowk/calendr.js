@@ -97,7 +97,7 @@
    * @api public
    */
 
-  Calendr.prototype.nameOfMonth = function(direction) {
+  Calendr.prototype.monthName = function(direction) {
     var offset = 0;
     if ('previous' === direction) {
       offset = -1;
