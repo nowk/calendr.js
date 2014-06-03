@@ -307,7 +307,7 @@
    * @api public
    */
 
-  Day.prototype.dayOfWeek = function() {
+  Day.prototype.name = function() {
     return days[this.moment.day()];
   };
 
@@ -318,7 +318,7 @@
    * @api public
    */
 
-  Day.prototype.nameOfMonth = function() {
+  Day.prototype.monthName = function() {
     return months[this.month()-1];
   };
 

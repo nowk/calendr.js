@@ -32,11 +32,11 @@ describe("Day", function() {
 
     describe("require invocation", function() {
       it("returns the name of the day of the week", function() {
-        assert.equal(day.dayOfWeek(), 'Tuesday');
+        assert.equal(day.name(), 'Tuesday');
       });
 
       it("returns the name of the month", function() {
-        assert.equal(day.nameOfMonth(), 'May');
+        assert.equal(day.monthName(), 'May');
       });
 
       it("tells you if today is 'today'", function() {
