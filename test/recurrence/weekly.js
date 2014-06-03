@@ -113,6 +113,17 @@ describe("weekly recurrence", function() {
       assertEvents(cal, range(1, 30, true), 0);
     });
   });
+
+  it("FIX repeat ends on same month, but different year", function() {
+    var event = ef("One", '2014-01-02T16:00:00-07:00', {
+      repeats: 'weekly',
+      repeatEndson: '2015-01-02T00:00:00-07:00',
+      repeatsOn: ["sunday", "saturday"],
+      endson: "2014-06-02T15:00:00-07:00"
+    });
+    cal.events([event]);
+
+    assertEvents(cal, [4, 5, 11, 12, 18, 19, 25, 26], 1);
   });
 
   it("recurr repeat times exeactly the remainder of the month", function() {
