@@ -2,6 +2,8 @@
 
 var t = require('./test_helper');
 var ef = t.eventFactory;
+var range = t.range;
+var assertEvents = t.assertEvents;
 var assert = require('chai').assert;
 var Calendr = require('..');
 var CalendrEvents = require('../lib/events');
@@ -49,6 +51,21 @@ describe('events', function() {
       return e.name;
     });
     assert.deepEqual(sorted, ['Two', 'Four', 'One', 'Three']);
+  });
+
+  it("only displays events in their appropriate month", function() {
+    var event = ef('One', new Date(2014, 0, 10));
+    var cal = new Calendr(new Date(2014, 0, 1), {dayObjects: true});
+    cal.goBackMonth();
+    cal.events([event]);
+
+    assertEvents(cal, range(1, 31, true), 0);
+
+    cal.goForwardMonth();
+    cal.goForwardMonth();
+    cal.events([event]);
+
+    assertEvents(cal, range(1, 28, true), 0);
   });
 
   describe("all-day event", function() {
