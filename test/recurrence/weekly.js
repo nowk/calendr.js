@@ -127,6 +127,19 @@ describe("weekly recurrence", function() {
     assertEvents(cal, [4, 5, 11, 12, 18, 19, 25, 26], 1);
   });
 
+  it("padding days for the next month should not have events", function() {
+    var event = ef("One", '2014-06-02T16:00:00-07:00', {
+      repeats: 'weekly',
+      repeatEndson: '2014-10-02T00:00:00-07:00',
+      repeatsOn: ["friday"]
+    });
+    cal = new Calendr(new Date(2014, 7, 1), {dayObjects: true});
+    cal.events([event]);
+
+    assertEvents(cal, [1, 8, 15, 22, 29], 1);
+    assertEvents(cal, [36], 0);
+  });
+
   it("recurr repeat times exeactly the remainder of the month", function() {
     var event = ef("One", new Date(2014, 0, 14), {
       repeats: 'weekly',
