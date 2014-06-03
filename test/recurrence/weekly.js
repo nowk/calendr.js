@@ -2,6 +2,7 @@
 
 var t = require("../test_helper");
 var ef = t.eventFactory;
+var range = t.range;
 var assert = require('chai').assert;
 var assertEvents = t.assertEvents;
 var Calendr = require('../..');
