@@ -61,7 +61,7 @@ describe("Calendr", function() {
     assert.equal(maycal.nameOfMonth(), 'May');
   });
 
-  it.only("returns the name of previous/next months", function() {
+  it("returns the name of previous/next months", function() {
     var jancal = new Calendr(new Date(2014, 0));
     var deccal = new Calendr(new Date(2014, 11));
 
