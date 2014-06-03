@@ -103,6 +103,16 @@ describe("weekly recurrence", function() {
       assertEvents(cal, [3, 4], 1);
       assertEvents(cal, [6, 10, 11, 13], 0);
     });
+
+    it("April", function() {
+      cal.goForwardMonth();
+      cal.goForwardMonth();
+      cal.goForwardMonth();
+      cal.events([event]); // April
+
+      assertEvents(cal, range(1, 30, true), 0);
+    });
+  });
   });
 
   it("recurr repeat times exeactly the remainder of the month", function() {
@@ -154,6 +164,16 @@ describe("weekly recurrence", function() {
 
       assertEvents(cal, [1, 3, 7, 8, 10], 1);
       assertEvents(cal, [14, 15, 17], 0);
+    });
+
+    it("May", function() {
+      cal.goForwardMonth();
+      cal.goForwardMonth();
+      cal.goForwardMonth();
+      cal.goForwardMonth();
+      cal.events([event]); // May
+
+      assertEvents(cal, range(1, 31, true), 0);
     });
   });
 });
