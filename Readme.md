@@ -32,11 +32,12 @@ Returns:
 When `dayObjects` is `true` each day item is returned as a `Day` object instead of a `Number`.
 
     var april = new Date(2014, 3);
-    april.dayObjects = true;
+    var aprilcal = new Calendr(april);
+    aprilcal.dayObjects = true;
 
 or
 
-    var april = new Date(2014, 3, {dayObjects: true});
+    var aprilcal = new Calendr(april, {dayObjects: true});
 
 `Day` objects include these methods:
 
