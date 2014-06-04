@@ -124,8 +124,11 @@
     }
 
     var index = this.moment.month()+offset;
-    if (index < 0) index = 12+index;
-    if (index > 11) index = 12-index;
+    if (index < 0) {
+      index = 12+index;
+    } else if (index > 11) {
+      index = 12-index;
+    }
 
     return months[index];
   };
