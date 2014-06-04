@@ -63,7 +63,7 @@
     opts = opts || {};
     this.auto = opts.auto || false;
     this.dayObjects = opts.dayObjects || false;
-    this.moment = moment(date);
+    this.moment = moment([date.getFullYear(), date.getMonth(), 1]);
     this.build();
   }
 
