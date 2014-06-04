@@ -368,9 +368,9 @@
   function day(date, moment) {
     if (this.dayObjects) {
       return new Day(moment.year(), moment.month()+1, date);
-    } else {
-      return date;
     }
+
+    return date;
   }
 })((!!!module && 'undefined' === typeof exports) ? window : null);
 
