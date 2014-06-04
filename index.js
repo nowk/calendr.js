@@ -372,5 +372,5 @@
 
     return date;
   }
-})((!!!module && 'undefined' === typeof exports) ? window : null);
+})(('undefined' === typeof module && 'undefined' === typeof exports) ? window : null);
 
