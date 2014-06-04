@@ -1,5 +1,23 @@
-;(function() {
+;(function(window) {
+  /*
+   * expose Calendr
+   */
+
   var moment;
+
+  if (window) {
+    if (!('moment' in window))
+      throw new Error('moment.js is required');
+
+    moment = window.moment;
+    window.Calendr = Calendr;
+  } else {
+    moment = require('moment');
+    exports = module.exports = Calendr;
+    exports.Day = Day;
+  }
+
+
   /*
    * days in english
    */
@@ -351,23 +369,5 @@
       return date;
     }
   }
-
-
-  /*
-   * expose Calendr
-   */
-
-  if ('undefined' !== typeof module && 'undefined' !== typeof module.exports) {
-    moment = require('moment');
-    exports = module.exports = Calendr;
-    exports.Day = Day;
-    exports.days = days;
-  } else {
-    if (!('moment' in window)) {
-      return console.error('Moment.js is required');
-    }
-    moment = window.moment;
-    window.Calendr = Calendr;
-  }
-})();
+})((!!!module && 'undefined' === typeof exports) ? window : null);
 
