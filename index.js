@@ -351,8 +351,11 @@
    */
 
   Day.prototype.isToday = function() {
+    var _now = new Date();
+    _now.setHours(0, 0, 0, 0);
+
+    var now = parseInt(_now.getTime()/100000, 10);      // milliseconds
     var thisday = parseInt(this.moment.unix()/100, 10); // seconds
-    var now = parseInt(Date.now()/100000, 10);          // milliseconds
     return thisday === now;
   };
 

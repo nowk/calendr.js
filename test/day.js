@@ -1,7 +1,6 @@
 /* jshint node: true */
 
 var assert = require('chai').assert;
-var sinon = require('sinon');
 var Day = require('..').Day;
 
 describe("Day", function() {
@@ -40,11 +39,9 @@ describe("Day", function() {
       });
 
       it("tells you if today is 'today'", function() {
-        var now = new Date(2014, 0, 1);
-        var day = new Day(2014, 1, 1);
-        var clock = sinon.useFakeTimers(now.getTime());
+        var now = new Date();
+        var day = new Day(now.getFullYear(), now.getMonth()+1, now.getDate());
         assert(day.isToday());
-        clock.restore();
       });
     });
   });
