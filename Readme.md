@@ -1,6 +1,8 @@
 # Calendr.js
 
+[![Build Status](https://travis-ci.org/nowk/calendr.js.svg?branch=master)](https://travis-ci.org/nowk/calendr.js)
 [![Code Climate](https://codeclimate.com/github/nowk/calendr.js.png)](https://codeclimate.com/github/nowk/calendr.js)
+[![David DM](https://david-dm.org/nowk/calendr.js.png)](https://david-dm.org/nowk/calendr.js)
 
 Weeks array grid for calendar month
 
