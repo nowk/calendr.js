@@ -1,14 +1,14 @@
 ;(function(window) {
+  var moment;
+
   /*
    * expose Calendr
    */
 
-  var moment;
-
   if (window) {
-    if (!('moment' in window))
+    if (!('moment' in window)) {
       throw new Error('moment.js is required');
-
+    }
     moment = window.moment;
     window.Calendr = Calendr;
   } else {
