@@ -87,10 +87,10 @@ it("FIX it prepads the grid based on the 'date' provided", function() {
     var jancal = new Calendr(new Date(2014, 0));
     var deccal = new Calendr(new Date(2014, 11));
 
-    assert.equal(jancal.monthName('previous'), 'December');
-    assert.equal(jancal.monthName('next'), 'February');
-    assert.equal(deccal.monthName('previous'), 'November');
-    assert.equal(deccal.monthName('next'), 'January');
+    assert.equal(jancal.prevMonthName(), 'December');
+    assert.equal(jancal.nextMonthName(), 'February');
+    assert.equal(deccal.prevMonthName(), 'November');
+    assert.equal(deccal.nextMonthName(), 'January');
   });
 
   it("can move forward and backward by month", function() {

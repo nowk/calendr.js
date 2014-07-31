@@ -134,6 +134,28 @@
   };
 
   /*
+   * prevMonthName is a helper method to return the previous month's name
+   *
+   * @return string
+   * @api public
+   */
+
+  Calendr.prototype.prevMonthName = function() {
+    return this.monthName("previous");
+  };
+
+  /*
+   * nextMonthName is a helper method to return the next month's name
+   *
+   * @return string
+   * @api public
+   */
+
+  Calendr.prototype.nextMonthName = function() {
+    return this.monthName("next");
+  };
+
+  /*
    * property alias for #slice
    *
    * @return {Array}
