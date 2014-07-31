@@ -29,20 +29,18 @@ describe("Day", function() {
       assert.equal(day.year(), 2014);
     });
 
-    describe("require invocation", function() {
-      it("returns the name of the day of the week", function() {
-        assert.equal(day.name(), 'Tuesday');
-      });
+    it("returns the name of the day of the week", function() {
+      assert.equal(day.name(), 'Tuesday');
+    });
 
-      it("returns the name of the month", function() {
-        assert.equal(day.monthName(), 'May');
-      });
+    it("returns the name of the month", function() {
+      assert.equal(day.monthName(), 'May');
+    });
 
-      it("tells you if today is 'today'", function() {
-        var now = new Date();
-        var day = new Day(now.getFullYear(), now.getMonth()+1, now.getDate());
-        assert(day.isToday());
-      });
+    it("tells you if today is 'today'", function() {
+      var now = new Date();
+      var day = new Day(now.getFullYear(), now.getMonth()+1, now.getDate());
+      assert(day.isToday());
     });
   });
 });
