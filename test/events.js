@@ -67,35 +67,5 @@ describe('events', function() {
 
     assertEvents(cal, range(1, 28, true), 0);
   });
-
-  describe("all-day event", function() {
-    it("sorts all-day events to the top of the sort heap, then by name");
-    it("if an all-day event recurs 2 or more days in a row, and another all-day event that " +
-      "starts on the 2nd day has a higher sort order. The first all-day event gets indexed " +
-      "at the same index as on day 2");
-
-      // This only applies on a weekly basis
-      // s | m | t | w | t | f | s
-      // ------------------------- week 1
-      //   | b | b |
-      // a | a | a | a | a | a | a
-      // ------------------------- week 2
-      // a | a |
-      // ------------------------- week 3
-      //   | b | b |
-      //       | a | a | a |
-      // ------------------------- week 4
-
-  });
-
-  describe("dates that start in one day and end in another", function() {
-    it("splits the date up into 2, one that spans from the start time to midnight, and another " +
-      "that starts at midnight and ends at the end time");
-
-    describe("if the span is larger th 2 days", function() {
-      it("splits the date up into n, one that spans from the start time to midnight, and another " +
-        "that starts at midnight and ends at the end time. The middle days start from midnight and end at midnight");
-    });
-  });
 });
 
