@@ -154,25 +154,12 @@ it("FIX it prepads the grid based on the 'date' provided", function() {
     Calendr.prototype.slice.restore();
   });
 
-  it("today's day isToday is true", function() {
-    var now = new Date(2014, 3, 21);
-    var clock = sinon.useFakeTimers(now.getTime());
-    var day = dayFactory(2014, 4);
+  it("it returns \"today\"", function() {
+    var now = new Date();
+    var cal = new Calendr(now, {auto: true});
 
-    var april = new Date(2014, 3);
-    var may = new Date(2014, 4);
-    var aprilcal = new Calendr(april, {auto: true, dayObjects: true});
-    var maycal = new Calendr(may, {auto: true, dayObjects: true});
-    assert.deepEqual(aprilcal.getToday(), day(21));
-    assert.isUndefined(maycal.getToday());
-
-    var aprilcalNoDayObj = new Calendr(april);
-    assert.equal(aprilcalNoDayObj.getToday(), 21);
-
-    var april2015 = new Calendr(new Date(2015, 3));
-    assert.isUndefined(april2015.getToday());
-
-    clock.restore();
+    var today = cal.getToday();
+    assert.equal(today, now.getDate());
   });
 
   /*
