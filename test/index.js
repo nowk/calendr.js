@@ -29,7 +29,7 @@ describe("Calendr", function() {
     ]);
   });
 
-it("FIX it prepads the grid based on the 'date' provided", function() {
+  it("FIX it prepads the grid based on the 'date' provided", function() {
     var april = new Date(2014, 03, 5); // month is 0 indexed
     var aprilcal = new Calendr(april);
     assert.deepEqual(aprilcal.grid(), [
