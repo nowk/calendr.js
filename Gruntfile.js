@@ -12,7 +12,8 @@ module.exports = function(grunt) {
             ' */' + "\n"
         },
         files:{
-          'dist/calendr.min.js': ['./index.js']
+          'dist/calendr.min.js': ['./index.js'],
+          'dist/calendr.events.min.js': ['./lib/events.js']
         }
       }
     },
