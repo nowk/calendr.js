@@ -110,17 +110,14 @@
   /*
    * return the name of the month
    *
-   * @param {String} direction
+   * @param {Number} offset
    * @return {String}
    * @api public
    */
 
-  Calendr.prototype.monthName = function(direction) {
-    var offset = 0;
-    if ('previous' === direction) {
-      offset = -1;
-    } else if ('next' === direction) {
-      offset = 1;
+  Calendr.prototype.monthName = function(offset) {
+    if ("undefined" === typeof offset) {
+      offset = 0;
     }
 
     var index = this.moment.month()+offset;
@@ -141,7 +138,7 @@
    */
 
   Calendr.prototype.prevMonthName = function() {
-    return this.monthName("previous");
+    return this.monthName(-1);
   };
 
   /*
@@ -152,7 +149,7 @@
    */
 
   Calendr.prototype.nextMonthName = function() {
-    return this.monthName("next");
+    return this.monthName(1);
   };
 
   /*

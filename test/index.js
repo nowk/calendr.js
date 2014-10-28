@@ -75,7 +75,7 @@ describe("Calendr", function() {
     clock.restore();
   });
 
-  it("returns the name of the month", function() {
+  it("returns the name of the current month", function() {
     var aprilcal = new Calendr(new Date(2014, 3));
     var maycal = new Calendr(new Date(2014, 4));
 
@@ -92,6 +92,15 @@ describe("Calendr", function() {
     assert.equal(deccal.prevMonthName(), 'November');
     assert.equal(deccal.nextMonthName(), 'January');
   });
+
+  it("returns the name of the month through an offset", function() {
+    var aprilcal = new Calendr(new Date(2014, 3));
+    var dec = aprilcal.monthName(-4);
+    var jan = aprilcal.monthName(9);
+
+    assert.equal(dec, "December");
+    assert.equal(jan, "January");
+  })
 
   it("can move forward and backward by month", function() {
     var april = new Date(2014, 3);
