@@ -3,7 +3,7 @@
 var assert = require('chai').assert;
 var sinon = require('sinon');
 var Calendr = require('..');
-var Day = Calendr.Day;
+var Day = require("../day");
 
 
 describe("Calendr", function() {
