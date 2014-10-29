@@ -1,11 +1,20 @@
 ;(function(window) {
   var moment, Event;
 
-/**
- * expose Event
- */
+  function check(k) {
+    if (!(k in window)) {
+      throw new Error(k+" is required");
+    }
+  }
+
+  /**
+   * expose Event
+   */
 
   if (window) {
+    check("moment");
+    
+    moment = window.moment;
     window.Event = Event;
   } else {
     moment = require("moment");
@@ -33,13 +42,14 @@
    */
 
   var defaultConfig = {
-    name: "name",
-    starts: "starts",
-    ends: "ends",
-    repeats: "repeats",
-    repeatsOn: "repeats_on",
+    name:         "name",
+    description:  "description",
+    starts:       "starts",
+    ends:         "ends",
+    repeats:      "repeats",
+    repeatsOn:    "repeats_on",
     repeatEndsOn: "repeat_ends_on",
-    repeatTimes: "repeat_times"
+    repeatTimes:  "repeat_times"
   }
 
   /**
@@ -59,37 +69,29 @@
     for(; i < len; i++) {
       var k = keys[i];
       var v = config[k];
-      copy[k] = v;
-      if (!!v) {
-        continue;
-      }
-      copy[k] = defaultConfig[k];
+      copy[k] = !!v ? v : defaultConfig[k];
     }
 
     return copy;
   }
 
   /**
-   * mapConfig maps an obj based on the config
+   * assign assigns properties from data based on config
    *
    * @param {Object} obj
    * @param {Object} config
    * @api private
    */
 
-  function mapConfig(obj, config) {
-    if ({} === obj) {
-      throw new Error("no event data");
-    }
-
+  function assign(obj, config) {
     var self = this;
-    var c = extend(config)
-    var keys = Object.keys(c);
+    var conf = !!config ? extend(config) : defaultConfig;
+    var keys = Object.keys(conf);
     var i = 0;
     var len = keys.length;
     for(; i < len; i++) {
       var k = keys[i];
-      var v = c[k];
+      var v = conf[k];
       self[k] = obj[v];
     }
   }
@@ -97,15 +99,13 @@
  /**
   * Event
   *
-  * @param {Object}
+  * @param {Object} obj (should be plain old object, like a JSON parse)
   * @param {Object} config
   * @constructor
   */
 
   function Event(obj, config) {
-    obj = obj || {};
-    config = config || defaultConfig;
-    mapConfig.call(this, obj, config);
+    assign.call(this, (obj || {}), config);
 
     this.starts = parseDate(this.starts);
     this.ends = parseDate(this.ends);

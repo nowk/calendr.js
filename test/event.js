@@ -1,7 +1,6 @@
 /* jshint node: true */
 
 var assert = require("chai").assert;
-var moment = require("moment");
 var Event = require("../event");
 
 describe('Event', function() {
