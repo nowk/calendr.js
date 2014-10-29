@@ -1,11 +1,11 @@
 /* jshint node: true */
 
 var assert = require('chai').assert;
-var Day = require('..').Day;
+var Day = require('../day');
 
 describe("Day", function() {
   it("returns the configured Date", function() {
-    var day = new Day(2014, 5, 27);
+    var day = new Day(2014, 4, 27);
     var a = parseInt(day.moment.unix()/100, 10);
     var b = parseInt(new Date(2014, 4, 27).getTime()/100000, 10);
     assert.equal(a, b);
@@ -14,7 +14,7 @@ describe("Day", function() {
   describe('properties', function() {
     var day;
     beforeEach(function() {
-      day = new Day(2014, 5, 27);
+      day = new Day(2014, 4, 27);
     });
 
     it('returns the date', function() {
@@ -22,7 +22,7 @@ describe("Day", function() {
     });
 
     it('returns the month, 1 indexed', function() {
-      assert.equal(day.month(), 5);
+      assert.equal(day.month(), 4);
     });
 
     it('returns the full year', function() {
@@ -39,7 +39,7 @@ describe("Day", function() {
 
     it("tells you if today is 'today'", function() {
       var now = new Date();
-      var day = new Day(now.getFullYear(), now.getMonth()+1, now.getDate());
+      var day = new Day(now.getFullYear(), now.getMonth(), now.getDate());
       assert(day.isToday());
     });
   });
