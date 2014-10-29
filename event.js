@@ -6,10 +6,10 @@
  */
 
   if (window) {
-   window.Event = Event;
+    window.Event = Event;
   } else {
-   moment = require("moment");
-   module.exports = Event;
+    moment = require("moment");
+    module.exports = Event;
   }
 
   /**
@@ -21,11 +21,11 @@
    */
 
   var parseDate = function(v) {
-   if (!!!v) {
-     return;
-   }
-
-   return moment(v);
+    if (!!!v) {
+      return;
+    }
+ 
+    return moment(v);
   }
 
   /**
@@ -161,7 +161,7 @@
     if (!!!this.ends) {
       return 1;
     }
-    
+
     var a = this.starts;
     var b = this.ends;
     a.hours(0);
