@@ -25,6 +25,31 @@ var dayofWeekIndex = function(dayName) {
 }
 
 /**
+ * condition is the conditional function for each recurrence type
+ * TODO optimize
+ */
+
+var condition = {
+  daily: function(d) {
+    return d.valueOf() >= this.from();
+  },
+  weekly: function(d) {
+    var daysInWeek = this.onDays().map(function(v) {
+      return dayofWeekIndex(v);
+    });
+    return d.valueOf() >= this.from() && ~daysInWeek.indexOf(d.day())
+  },
+  monthly: function(d) {
+    var m = parseDate(this.from());
+    return d.date() === m.date();
+  },
+  yearly: function(d) {
+    var m = parseDate(this.from());
+    return d.month() === m.month() && d.date() === m.date();
+  }
+};
+
+/**
  * recurrences returns copies of the event for the days in which they recurr
  *
  * @param {Event} event
@@ -43,68 +68,25 @@ function recurrences(event, range) {
   var from = recur.from();
   var till = recur.till();
 
+  var fn = condition[type];
+  if (!!!fn) {
+    return [];
+  }
+  
   var events = [];
   var i = 0;
   var len = range.length;
-  if ("daily" === type) {
-    for(; i < len; i++) {
-      var d = parseDate(range[i].moment);
-      var date = d.valueOf();
-      if (till && date > till) {
-        break;
-      }
-
-      if (date >= from) {
-        events.push(clone(event, d));
-      }
+  var cond = fn.bind(recur);
+  for(; i < len; i++) {
+    var d = parseDate(range[i].moment);
+    var date = d.valueOf();
+    if (till && date > till) {
+      break;
     }
-  }
 
-  var m = parseDate(from);
-  if ("weekly" === type) {
-    var daysInWeek = recur.onDays().map(function(v) {
-      return dayofWeekIndex(v);
-    });
-
-    for(; i < len; i++) {
-      var d = parseDate(range[i].moment);
-      var date = d.valueOf();      
-      if (till && date > till) {
-        break;
-      }
-
-      if (date >= from && ~daysInWeek.indexOf(d.day())) {
-        events.push(clone(event, d));
-      }
-    } 
-  }
-
-  if ("monthly" === type) {
-    for(; i < len; i++) {
-      var d = parseDate(range[i].moment);
-      var date = d.valueOf();      
-      if (till && date > till) {
-        break;
-      }
-
-      if (d.date() === m.date()) {
-        events.push(clone(event, d));
-      }
-    } 
-  }
-
-  if ("yearly" === type) {
-    for(; i < len; i++) {
-      var d = parseDate(range[i].moment);
-      var date = d.valueOf();      
-      if (till && date > till) {
-        break;
-      }
-
-      if (d.month() === m.month() && d.date() === m.date()) {
-        events.push(clone(event, d));
-      }
-    } 
+    if (cond(d)) {
+      events.push(clone(event, d));
+    }
   }
 
   return events;
