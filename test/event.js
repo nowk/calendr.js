@@ -58,7 +58,7 @@ describe('Event', function() {
     assert.equal(evt.repeatTimes, data.noTimes);
   });
 
-  it("returns a collection of days in which an event spans", function() {
+  it("returns a collection of days through which an event spans", function() {
     var evt = new Event({
       name: "Awesome Event",
       starts: new Date(2014, 0, 1, 0, 30, 55),
