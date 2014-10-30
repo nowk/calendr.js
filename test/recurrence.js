@@ -5,14 +5,18 @@ var recurrences = require("../recurrences");
 var Event = require("../event");
 var Calendr = require("..");
 
+var calRange = function(date) {
+  var cal = new Calendr(date, {dayObjects: true});
+  return [].concat.apply([], cal.grid());
+}
+
 describe("recurrences", function() {
   it("returns 0 events if the event contains no recurrence", function() {
     var evt = new Event({
       starts: new Date(2014, 0, 16),
       ends: new Date(2014, 0, 16)
     });
-    var cal = new Calendr(new Date(2014, 0), {dayObjects: true});
-    var range = [].concat.apply([], cal.grid());
+    var range = calRange(new Date(2014, 0));
     var events = recurrences(evt, range);
     assert.lengthOf(events, 0);
   });
@@ -23,8 +27,7 @@ describe("recurrences", function() {
       ends: new Date(2014, 0, 16),
       repeats: "daily"
     });
-    var cal = new Calendr(new Date(2014, 0), {dayObjects: true});
-    var range = [].concat.apply([], cal.grid());
+    var range = calRange(new Date(2014, 0));
     var events = recurrences(evt, range);
     assert.lengthOf(events, 17);
   });
@@ -36,8 +39,7 @@ describe("recurrences", function() {
       repeats: "daily",
       repeat_ends_on: new Date(2014, 1, 3)
     });
-    var cal = new Calendr(new Date(2014, 1), {dayObjects: true});
-    var range = [].concat.apply([], cal.grid());
+    var range = calRange(new Date(2014, 1));
     var events = recurrences(evt, range);
     assert.lengthOf(events, 9);
   });
@@ -49,15 +51,11 @@ describe("recurrences", function() {
       repeats: "daily",
       repeat_times: 5
     });
-
-    var cal = new Calendr(new Date(2014, 0), {dayObjects: true});
-    var events = recurrences(evt, cal);
-    var range = [].concat.apply([], cal.grid());
+    var range = calRange(new Date(2014, 0));
     var events = recurrences(evt, range);
     assert.lengthOf(events, 6);
 
-    cal = new Calendr(new Date(2015, 0), {dayObjects: true});
-    range = [].concat.apply([], cal.grid());
+    range = calRange(new Date(2015, 0));
     events = recurrences(evt, range);
     assert.lengthOf(events, 0);
   });
@@ -69,14 +67,11 @@ describe("recurrences", function() {
       ends: new Date(2014, 0, 16),
       repeats: "monthly"
     });
-
-    var cal = new Calendr(new Date(2014, 0), {dayObjects: true});
-    var range = [].concat.apply([], cal.grid());
+    var range = calRange(new Date(2014, 0));
     var events = recurrences(evt, range);
     assert.lengthOf(events, 1);
 
-    cal = new Calendr(new Date(2014, 3), {dayObjects: true});
-    range = [].concat.apply([], cal.grid());
+    range = calRange(new Date(2014, 3));
     events = recurrences(evt, range);
     assert.lengthOf(events, 1);
   });
@@ -88,14 +83,11 @@ describe("recurrences", function() {
       repeats: "monthly",
       repeat_ends_on: new Date(2014, 3, 15)
     });
-
-    var cal = new Calendr(new Date(2014, 2), {dayObjects: true});
-    var range = [].concat.apply([], cal.grid());
+    var range = calRange(new Date(2014, 2));
     var events = recurrences(evt, range);
     assert.lengthOf(events, 1);
 
-    cal = new Calendr(new Date(2014, 3), {dayObjects: true});
-    range = [].concat.apply([], cal.grid());
+    range = calRange(new Date(2014, 3));
     events = recurrences(evt, range);
     assert.lengthOf(events, 0);
   });
@@ -107,14 +99,11 @@ describe("recurrences", function() {
       repeats: "monthly",
       repeat_times: 3
     });
-
-    var cal = new Calendr(new Date(2014, 3), {dayObjects: true});
-    var range = [].concat.apply([], cal.grid());
+    var range = calRange(new Date(2014, 3));
     var events = recurrences(evt, range);
     assert.lengthOf(events, 1);
 
-    cal = new Calendr(new Date(2014, 4), {dayObjects: true});
-    range = [].concat.apply([], cal.grid());
+    range = calRange(new Date(2014, 4));
     events = recurrences(evt, range);
     assert.lengthOf(events, 0);
   });
