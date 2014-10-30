@@ -55,9 +55,9 @@ describe("Calendr", function() {
     var now = new Date(2014, 3, 21);
     var clock = sinon.useFakeTimers(now.getTime());
 
-    var a = dayFactory(2014, 3);
-    var b = dayFactory(2014, 4);
-    var c = dayFactory(2014, 5);
+    var a = dayFactory(2014, 2);
+    var b = dayFactory(2014, 3);
+    var c = dayFactory(2014, 4);
 
     var april = new Date(2014, 3);
     var aprilcal = new Calendr(april);

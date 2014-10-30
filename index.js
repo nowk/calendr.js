@@ -266,7 +266,7 @@ function fill(week) {
 
 function day(date, moment) {
   if (this.dayObjects) {
-    return new Day(moment.year(), moment.month()+1, date);
+    return new Day(moment.year(), moment.month(), date);
   }
 
   return date;
