@@ -1,12 +1,28 @@
 /* jshint node: true */
 
 var parseDate = require("./utils").parseDate;
+var days = require("./utils").days.map(function(v) {
+  return v.toLowerCase();
+});
 
 /**
  * expose
  */
 
 module.exports = recurrences;
+
+/**
+ * dayofWeekIndex returns the index of the day of the week by name
+ * week starts on Sunday
+ *
+ * @param {String} dayName
+ * @return {Number}
+ * @api private
+ */
+
+var dayofWeekIndex = function(dayName) {
+  return days.indexOf(dayName.toLowerCase());
+}
 
 /**
  * recurrences returns copies of the event for the days in which they recurr
@@ -45,6 +61,24 @@ function recurrences(event, range) {
   }
 
   var m = parseDate(from);
+  if ("weekly" === type) {
+    var daysInWeek = recur.onDays().map(function(v) {
+      return dayofWeekIndex(v);
+    });
+
+    for(; i < len; i++) {
+      var d = parseDate(range[i].moment);
+      var date = d.valueOf();      
+      if (till && date > till) {
+        break;
+      }
+
+      if (date >= from && ~daysInWeek.indexOf(d.day())) {
+        events.push(clone(event, d));
+      }
+    } 
+  }
+
   if ("monthly" === type) {
     for(; i < len; i++) {
       var d = parseDate(range[i].moment);
@@ -59,7 +93,6 @@ function recurrences(event, range) {
     } 
   }
 
-  var m = parseDate(from);
   if ("yearly" === type) {
     for(; i < len; i++) {
       var d = parseDate(range[i].moment);
@@ -124,6 +157,11 @@ Recur.prototype.till = function() {
       s.add(n, "days");
     }
 
+    if ("weekly" === type) {
+      s.startOf("week");
+      s.add(n, "weeks");
+    }
+
     if ("monthly" === type) {
       s.add(n, "months");
     }
@@ -145,6 +183,18 @@ Recur.prototype.till = function() {
 
 Recur.prototype.type = function() {
   return this.event.repeats;
+};
+
+/**
+ * onDays returns the days in which an event recurs
+ * Only available for weekly recurrences
+ *
+ * @return {[String]}
+ * @api public
+ */
+
+Recur.prototype.onDays = function() {
+  return this.event.repeatsOn;
 };
 
 /**

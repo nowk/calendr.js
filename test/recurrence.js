@@ -60,6 +60,51 @@ describe("recurrences", function() {
     assert.lengthOf(events, 0);
   });
 
+  it("returns weekly recurrences till no end", function() {
+    var evt = new Event({
+      starts: new Date(2014, 0, 16),
+      ends: new Date(2014, 0, 16),
+      repeats: "weekly",
+      repeats_on: ["monday", "tuesday", "friday"]
+    });
+    var range = calRange(new Date(2014, 0));
+    var events = recurrences(evt, range);
+    assert.lengthOf(events, 7);
+
+    range = calRange(new Date(2014, 3));
+    events = recurrences(evt, range);
+    assert.lengthOf(events, 15);
+  });
+
+  it("returns weekly recurrences till repeat ends date", function() {
+    var evt = new Event({
+      starts: new Date(2014, 0, 16),
+      ends: new Date(2014, 0, 16),
+      repeats: "weekly",
+      repeats_on: ["monday", "tuesday", "friday"],
+      repeat_ends_on: new Date(2014, 2, 1)
+    });
+    var range = calRange(new Date(2014, 1));
+    var events = recurrences(evt, range);
+    assert.lengthOf(events, 15);
+
+    range = calRange(new Date(2014, 2));
+    events = recurrences(evt, range);
+    assert.lengthOf(events, 3);
+  });
+
+  it("returns weekly recurrences for a # of times", function() {
+    var evt = new Event({
+      starts: new Date(2014, 0, 16),
+      ends: new Date(2014, 0, 16),
+      repeats: "weekly",
+      repeats_on: ["monday", "tuesday", "friday"],
+      repeat_times: 5
+    });
+    var range = calRange(new Date(2014, 1));
+    var events = recurrences(evt, range);
+    assert.lengthOf(events, 9);
+  });
 
   it("returns monthly recurrences till no end", function() {
     var evt = new Event({
