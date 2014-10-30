@@ -1,6 +1,6 @@
 /* jshint node: true */
 
-var moment = require('moment');
+var parseDate = require('./utils').parseDate;
 var months = require("./utils").months;
 var Day = require("./day");
 
@@ -22,7 +22,7 @@ function Calendr(date, opts) {
   opts = opts || {};
   this.auto = opts.auto || false;
   this.dayObjects = opts.dayObjects || false;
-  this.moment = moment([date.getFullYear(), date.getMonth(), 1]);
+  this.moment = parseDate([date.getFullYear(), date.getMonth(), 1]);
   this.build();
 }
 
@@ -34,8 +34,8 @@ function Calendr(date, opts) {
 
 Calendr.prototype.build = function() {
   var base = [this.moment.year(), this.moment.month()];
-  this.i = moment(base.concat([1])).day();
-  this.len = moment(base.concat([this.moment.daysInMonth()])).day();
+  this.i = parseDate(base.concat([1])).day();
+  this.len = parseDate(base.concat([this.moment.daysInMonth()])).day();
 
   if (this.auto) {
     this._grid = this.slice();
@@ -229,7 +229,7 @@ function calendardays() {
 
 function prepad(days) {
   var self = this;
-  var prevmonth = moment(this.moment).subtract('month', 1);
+  var prevmonth = parseDate(this.moment).subtract('month', 1);
   var i = 0;
   var index = this.moment.day();
   for(; i<index; i++) {
@@ -246,7 +246,7 @@ function prepad(days) {
 
 function fill(week) {
   var self = this;
-  var nextmonth = moment(this.moment).add('month', 1);
+  var nextmonth = parseDate(this.moment).add('month', 1);
   var i = 0;
   var len = 7-week.length;
   for(; i<len; i++) {

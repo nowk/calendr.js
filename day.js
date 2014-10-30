@@ -1,6 +1,6 @@
 /* jshint node: true */
 
-var moment = require("moment");
+var parseDate = require("./utils").parseDate;
 var months = require("./utils").months;
 var days = require("./utils").days;
 
@@ -20,7 +20,7 @@ module.exports = Day;
  */
 
 function Day(year, month, date) {
-  this.moment = moment(new Date(year, month, date));
+  this.moment = parseDate(new Date(year, month, date));
   this.events = [];
 }
 

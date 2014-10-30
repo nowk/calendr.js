@@ -1,28 +1,12 @@
 /* jshint node: true */
 
-var moment = require("moment");
+var parseDate = require("./utils").parseDate;
 
 /**
  * expose Event
  */
 
 module.exports = Event;
-
-/**
- * parseDate converts to Date
- *
- * @param {String|Number|Date} v
- * @return {Moment}
- * @api private
- */
-
-var parseDate = function(v) {
-  if (!!!v) {
-    return;
-  }
-
-  return moment(v);
-}
 
 /**
  * defaultConfig is the default mapping table

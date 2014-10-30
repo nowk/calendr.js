@@ -1,28 +1,12 @@
 /* jshint node: true */
 
-var moment = require("moment");
+var parseDate = require("./utils").parseDate;
 
 /**
  * expose
  */
 
 module.exports = recurrences;
-
-/**
- * parseDate converts to Date
- *
- * @param {String|Number|Date} v
- * @return {Moment}
- * @api private
- */
-
-var parseDate = function(v) {
-  if (!!!v) {
-    return;
-  }
-
-  return moment(v);
-}
 
 /**
  * recurrences returns copies of the event for the days in which they recurr
@@ -55,7 +39,7 @@ function recurrences(event, cal) {
       if (till && date > till) {
         break;
       }
-      
+
       if (date >= from) {
         events.push(clone(event, d));
       }
