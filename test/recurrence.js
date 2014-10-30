@@ -61,4 +61,61 @@ describe("recurrences", function() {
     events = recurrences(evt, range);
     assert.lengthOf(events, 0);
   });
+
+
+  it("returns monthly recurrences till no end", function() {
+    var evt = new Event({
+      starts: new Date(2014, 0, 16),
+      ends: new Date(2014, 0, 16),
+      repeats: "monthly"
+    });
+
+    var cal = new Calendr(new Date(2014, 0), {dayObjects: true});
+    var range = [].concat.apply([], cal.grid());
+    var events = recurrences(evt, range);
+    assert.lengthOf(events, 1);
+
+    cal = new Calendr(new Date(2014, 3), {dayObjects: true});
+    range = [].concat.apply([], cal.grid());
+    events = recurrences(evt, range);
+    assert.lengthOf(events, 1);
+  });
+
+  it("returns monthly recurrences till repeat ends date", function() {
+    var evt = new Event({
+      starts: new Date(2014, 0, 16),
+      ends: new Date(2014, 0, 16),
+      repeats: "monthly",
+      repeat_ends_on: new Date(2014, 3, 15)
+    });
+
+    var cal = new Calendr(new Date(2014, 2), {dayObjects: true});
+    var range = [].concat.apply([], cal.grid());
+    var events = recurrences(evt, range);
+    assert.lengthOf(events, 1);
+
+    cal = new Calendr(new Date(2014, 3), {dayObjects: true});
+    range = [].concat.apply([], cal.grid());
+    events = recurrences(evt, range);
+    assert.lengthOf(events, 0);
+  });
+
+  it("returns monthly recurrences for a # of times", function() {
+    var evt = new Event({
+      starts: new Date(2014, 0, 16),
+      ends: new Date(2014, 0, 16),
+      repeats: "monthly",
+      repeat_times: 3
+    });
+
+    var cal = new Calendr(new Date(2014, 3), {dayObjects: true});
+    var range = [].concat.apply([], cal.grid());
+    var events = recurrences(evt, range);
+    assert.lengthOf(events, 1);
+
+    cal = new Calendr(new Date(2014, 4), {dayObjects: true});
+    range = [].concat.apply([], cal.grid());
+    events = recurrences(evt, range);
+    assert.lengthOf(events, 0);
+  });
 });

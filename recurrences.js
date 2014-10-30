@@ -18,19 +18,19 @@ module.exports = recurrences;
  */
 
 function recurrences(event, range) {
-  var events = [];
-  var repeats = event.repeats;
-  if (!!!repeats) {
-    return events;
+  var recur = new Recur(event);
+  if (!recur.yes()) {
+    return [];
   }
 
-  var recur = new Recur(event);
+  var type = recur.type();
   var from = recur.from();
   var till = recur.till();
 
-  if ("daily" === repeats) {
-    var i = 0;
-    var len = range.length;
+  var events = [];
+  var i = 0;
+  var len = range.length;
+  if ("daily" === type) {
     for(; i < len; i++) {
       var d = parseDate(range[i].moment);
       var date = d.valueOf();
@@ -42,6 +42,21 @@ function recurrences(event, range) {
         events.push(clone(event, d));
       }
     }
+  }
+
+  var m = parseDate(from);
+  if ("monthly" === type) {
+    for(; i < len; i++) {
+      var d = parseDate(range[i].moment);
+      var date = d.valueOf();      
+      if (till && date > till) {
+        break;
+      }
+
+      if (d.date() === m.date()) {
+        events.push(clone(event, d));
+      }
+    } 
   }
 
   return events;
@@ -69,7 +84,7 @@ Recur.prototype.from = function() {
   var s = parseDate(this.event.starts);
   s.startOf("day");
   return s.valueOf();
-}
+};
 
 /**
  * till returns teh date at which the recurrence stops
@@ -85,14 +100,44 @@ Recur.prototype.till = function() {
     return ends.valueOf();
   }
 
+  var type = this.type();
   var n = this.event.repeatTimes;
   if (n > 0) {
     var s = parseDate(this.event.starts);
     s.startOf("day");
-    s.add(n, "days");
+    if ("daily" === type) {
+      s.add(n, "days");
+    }
+
+    if ("monthly" === type) {
+      s.add(n, "months");
+    }
+    
     return s.valueOf();
   }
-}
+};
+
+/**
+ * type returns the repeats types, eg. daily, weekly, etc...
+ *
+ * @return {String}
+ * @api public
+ */
+
+Recur.prototype.type = function() {
+  return this.event.repeats;
+};
+
+/**
+ * yes returns true if event repeats
+ *
+ * @return {Bool}
+ * @api public
+ */
+
+Recur.prototype.yes = function() {
+  return !!this.type();
+};
 
 /**
  * Event provides a clnne of an event matched to the date of the recurrence
