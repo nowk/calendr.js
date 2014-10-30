@@ -85,7 +85,9 @@ function assign(obj, config) {
 }
 
 /**
-* Event
+* Event is the underlying data structure of an event.
+* This object does not get applied into a calendar grid itself. It spawns off
+* clones that are representative of the Event in relation to a give calendar.
 *
 * @param {Object} obj (should be plain old object, like a JSON parse)
 * @param {Object} config
@@ -129,27 +131,32 @@ Event.prototype.days = function() {
   var i = 0;
   var len = d.length();
   for(; i < len; i++) {
-    days.push(eventDay(self, i));
+    days.push(new EventDay(self, i));
   }
   return days;
 };
 
 /**
- * eventDay clones the event to an EventDay
+ * placeOn places the Event's days on the given calendar
  *
- * @param {Event} event
- * @param {Number} i
- * @return {EventDay}
- * @api private
+ * @param {Calendr} cal
+ * @api public
  */
 
-function eventDay(event, i) {
-  EventDay.prototype = event;
-  return new EventDay(event, i);
+Event.prototype.placeOn = function(cal) {
+  var days = this.days(); 
+  var i = 0;
+  var len = days.length;
+  for(; i < len; i++) {
+    var d = days[i];
+    d.placeOn(cal);
+  }
 }
 
 /**
- * EventDay is a wrapper around Event to describe the event on a particular day
+ * EventDay is a struct in which Event is cloned onto
+ * It is a cloned representation of the event on a particular span of day
+ * associated with the event
  *
  * @param {Event} event
  * @param {Number} i (index of the day in the span of the event)
@@ -165,8 +172,28 @@ function EventDay(event, i) {
   date.startOf("day");
   date.add(this.i, "days");
 
+  assign.call(this, event, defaultConfig);
   this.starts = starts.call(this);
   this.ends = ends.call(this);
+};
+
+/**
+ * placeOn places the EventDay on the calender
+ *
+ * @param {Calendr} cal
+ * @api public
+ */
+
+EventDay.prototype.placeOn = function(cal) {
+  var cm = moment(cal.moment).startOf("month");
+  var tm = moment(this.date).startOf("month");
+  if (!sameDate(cm, tm)) {
+    return;
+  }
+
+  var i = this.date.date();
+  var day = cal.getDay(i);
+  day.events.push(this);
 };
 
 /**
@@ -179,7 +206,7 @@ function EventDay(event, i) {
 function starts() {
   var starts = moment(this.event.starts);
   starts.startOf("day");
-  if (sameDay(this.date, starts)) {
+  if (sameDate(this.date, starts)) {
     return this.event.starts;
   }
 
@@ -198,7 +225,7 @@ function starts() {
 function ends() {
   var ends = moment(this.event.ends);
   ends.startOf("day");
-  if (sameDay(this.date, ends)) {
+  if (sameDate(this.date, ends)) {
     return this.event.ends;
   }
 
@@ -208,7 +235,7 @@ function ends() {
 }
 
 /**
- * same day compares a pair of dates by their int representations
+ * sameDate compares a pair of dates by their int representations
  * 
  * @param {Moment} a 
  * @param {Moment} b 
@@ -216,7 +243,7 @@ function ends() {
  * @api private
  */
 
-function sameDay(a, b) {
+function sameDate(a, b) {
   return a.valueOf() === b.valueOf(); 
 }
 

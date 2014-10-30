@@ -1,6 +1,8 @@
 /* jshint node: true */
 
+var t = require("./test_helper");
 var assert = require("chai").assert;
+var Calendr = require("..");
 var Event = require("../event");
 var Day = require("../day");
 
@@ -83,7 +85,24 @@ describe('Event', function() {
       assert.equal(d.ends.valueOf(), v.e.getTime());
       assert.equal(d.name, "Awesome Event");
       assert.deepEqual(d.event, evt);
+      assert.isUndefined(d.days);
     }
+  });
+
+  it("can apply its days to a calendar", function() {
+    var evt = new Event({
+      starts: new Date(2014, 0, 1, 0, 30, 55),
+      ends: new Date(2014, 0, 4, 14, 10, 21),
+    });
+
+    var cal = new Calendr(new Date(2014, 0, 1), {dayObjects: true});
+    evt.placeOn(cal);
+    t.assertEvents(cal, t.range(1, 4, true), 1);
+    t.assertEvents(cal, t.range(5, 31, true), 0);
+
+    cal = new Calendr(new Date(2014, 1, 1), {dayObjects: true});
+    evt.placeOn(cal);
+    t.assertEvents(cal, t.range(1, 28, true), 0);
   });
 });
 
