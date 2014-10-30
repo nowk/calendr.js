@@ -12,19 +12,17 @@ module.exports = recurrences;
  * recurrences returns copies of the event for the days in which they recurr
  *
  * @param {Event} event
- * @param {Calendr} cal
+ * @param {[Day]} range
  * @return {[Event]}
  * @api public
  */
 
-function recurrences(event, cal) {
+function recurrences(event, range) {
   var events = [];
   var repeats = event.repeats;
   if (!!!repeats) {
     return events;
   }
-
-  var range = [].concat.apply([], cal.grid());
 
   var recur = new Recur(event);
   var from = recur.from();
