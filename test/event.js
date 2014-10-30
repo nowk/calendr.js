@@ -60,6 +60,7 @@ describe('Event', function() {
 
   it("returns a collection of days in which an event spans", function() {
     var evt = new Event({
+      name: "Awesome Event",
       starts: new Date(2014, 0, 1, 0, 30, 55),
       ends: new Date(2014, 0, 4, 14, 10, 21),
     });
@@ -78,8 +79,10 @@ describe('Event', function() {
     for(; i < len; i++) {
       var d = days[i];
       var v = table[i];
-      assert.equal(d.starts().valueOf(), v.s.getTime());
-      assert.equal(d.ends().valueOf(), v.e.getTime());
+      assert.equal(d.starts.valueOf(), v.s.getTime());
+      assert.equal(d.ends.valueOf(), v.e.getTime());
+      assert.equal(d.name, "Awesome Event");
+      assert.deepEqual(d.event, evt);
     }
   });
 });

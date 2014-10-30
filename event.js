@@ -129,10 +129,24 @@ Event.prototype.days = function() {
   var i = 0;
   var len = d.length();
   for(; i < len; i++) {
-    days.push(new EventDay(self, i));
+    days.push(eventDay(self, i));
   }
   return days;
 };
+
+/**
+ * eventDay clones the event to an EventDay
+ *
+ * @param {Event} event
+ * @param {Number} i
+ * @return {EventDay}
+ * @api private
+ */
+
+function eventDay(event, i) {
+  EventDay.prototype = event;
+  return new EventDay(event, i);
+}
 
 /**
  * EventDay is a wrapper around Event to describe the event on a particular day
@@ -150,16 +164,19 @@ function EventDay(event, i) {
   var date = this.date = moment(this.event.starts);
   date.startOf("day");
   date.add(this.i, "days");
+
+  this.starts = starts.call(this);
+  this.ends = ends.call(this);
 };
 
 /**
  * start returns the start date of the event for the given day
  * 
  * @return {Moment}
- * @api public
+ * @api private
  */
 
-EventDay.prototype.starts = function() {
+function starts() {
   var starts = moment(this.event.starts);
   starts.startOf("day");
   if (sameDay(this.date, starts)) {
@@ -175,10 +192,10 @@ EventDay.prototype.starts = function() {
  * ends returns the end date of the event for the given day
  * 
  * @return {Moment}
- * @api public
+ * @api private
  */
 
-EventDay.prototype.ends = function() {
+function ends() {
   var ends = moment(this.event.ends);
   ends.startOf("day");
   if (sameDay(this.date, ends)) {
