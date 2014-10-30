@@ -168,7 +168,7 @@ function EventDay(event, i) {
   this.event = event;
   this.i = i || 0;
 
-  var date = this.date = moment(this.event.starts);
+  var date = this.date = parseDate(this.event.starts);
   date.startOf("day");
   date.add(this.i, "days");
 
@@ -185,8 +185,8 @@ function EventDay(event, i) {
  */
 
 EventDay.prototype.placeOn = function(cal) {
-  var cm = moment(cal.moment).startOf("month");
-  var tm = moment(this.date).startOf("month");
+  var cm = parseDate(cal.moment).startOf("month");
+  var tm = parseDate(this.date).startOf("month");
   if (!sameDate(cm, tm)) {
     return;
   }
@@ -204,13 +204,13 @@ EventDay.prototype.placeOn = function(cal) {
  */
 
 function starts() {
-  var starts = moment(this.event.starts);
+  var starts = parseDate(this.event.starts);
   starts.startOf("day");
   if (sameDate(this.date, starts)) {
     return this.event.starts;
   }
 
-  var sod = moment(this.date);
+  var sod = parseDate(this.date);
   sod.startOf("day");
   return sod;
 }
@@ -223,13 +223,13 @@ function starts() {
  */
 
 function ends() {
-  var ends = moment(this.event.ends);
+  var ends = parseDate(this.event.ends);
   ends.startOf("day");
   if (sameDate(this.date, ends)) {
     return this.event.ends;
   }
 
-  var eod = moment(this.date);
+  var eod = parseDate(this.date);
   eod.endOf("day");
   return eod;
 }
@@ -257,8 +257,8 @@ function sameDate(a, b) {
  */
 
 function Duration(starts, ends) {
-  this.starts = moment(starts);
-  this.ends = moment(ends);
+  this.starts = parseDate(starts);
+  this.ends = parseDate(ends);
 }
 
 /**
