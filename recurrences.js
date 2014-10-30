@@ -59,6 +59,21 @@ function recurrences(event, range) {
     } 
   }
 
+  var m = parseDate(from);
+  if ("yearly" === type) {
+    for(; i < len; i++) {
+      var d = parseDate(range[i].moment);
+      var date = d.valueOf();      
+      if (till && date > till) {
+        break;
+      }
+
+      if (d.month() === m.month() && d.date() === m.date()) {
+        events.push(clone(event, d));
+      }
+    } 
+  }
+
   return events;
 }
 
@@ -112,7 +127,11 @@ Recur.prototype.till = function() {
     if ("monthly" === type) {
       s.add(n, "months");
     }
-    
+
+    if ("yearly" === type) {
+      s.add(n, "years");
+    }
+
     return s.valueOf();
   }
 };
