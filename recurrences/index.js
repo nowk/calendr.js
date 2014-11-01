@@ -78,10 +78,8 @@ function recurrences(event, range) {
   var len = range.length;
   var cond = fn.bind(recur);
   for(; i < len; i++) {
-    var d = parseDate(range[i].moment);
-
+    var d = parseDate(range[i].moment, event.tz);
     // adjust to the events timezone for comparison
-    d.zone(recur.tz());
 
     var date = d.valueOf();
     if (till && date > till) {
