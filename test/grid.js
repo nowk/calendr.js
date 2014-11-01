@@ -171,6 +171,17 @@ describe("Grid", function() {
     assert.equal(today, now.getDate());
   });
 
+  it("returns a day by date", function() {
+    var cal = new Grid(new Date(2014, 7), {dayObjects: true});
+    var getdate = new Date(2014, 8, 6);
+    var day = cal.getDay(getdate)
+    assert.equal(day.moment.valueOf(), getdate.getTime());
+
+    getdate = new Date(2014, 6, 27);
+    day = cal.getDay(getdate)
+    assert.equal(day.moment.valueOf(), getdate.getTime());
+  });
+
   /*
    * day factory
    *

@@ -188,12 +188,16 @@ Grid.prototype.getToday = function() {
 /*
  * return the day
  *
- * @param {Number} date
+ * @param {Moment|Date} date
  * @return {Day}
  * @api public
  */
 
 Grid.prototype.getDay = function(date) {
+  if ("number" !== typeof date) {
+    return findByDate.call(this, date);
+  }
+
   var dayi = (date-1)+this.moment.day(); // offset with the actual start on index
   var weeki = Math.floor(dayi/7);
 
@@ -204,6 +208,40 @@ Grid.prototype.getDay = function(date) {
 
   return this.grid()[weeki][dayi];
 };
+
+/**
+ * findByDate finds a day by a date
+ *
+ * @param {Date|Moment} date
+ * @return {Day}
+ * @api private
+ */
+
+function findByDate(date) {
+  var d = parseDate(date);
+  d.startOf("day");
+  var vof = d.valueOf();
+  var tz = d.zone();
+
+  var self = this;
+  var weeks = this.grid();
+  var i = 0;
+  var len = weeks.length;
+  for(; i < len; i++) {
+    var week = weeks[i];
+    var n = 0;
+    var nlen = week.length;
+    for(; n < nlen; n++) {
+      var day = week[n];
+      var f = parseDate(day.moment, tz);
+      f.startOf("day");
+      if (f.valueOf() === vof) {
+      // console.log(f.toDate(), d.toDate());
+        return day;
+      }
+    }
+  }
+}
 
 /*
  * create an array of calendar days
