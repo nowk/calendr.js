@@ -59,6 +59,10 @@ function assign(obj, config) {
 function Event(obj, config, tz) {
   assign.call(this, (obj || {}), config);
 
+  if ("undefined" !== typeof tz) {
+    this.tz = tz;
+  }
+
   this.starts = parseDate(this.starts, tz);  
   this.ends = parseDate(this.ends, tz);
   this.repeatEndsOn = parseDate(this.repeatEndsOn, tz);
@@ -66,8 +70,6 @@ function Event(obj, config, tz) {
   if (!!!this.starts || !!!this.ends) {
     throw new Error("must have a starts and ends date") ;
   }
-
-  this.tz = this.starts.zone();
 }
 
 /**

@@ -160,11 +160,11 @@ describe("recurrences", function() {
       repeats: "monthly",
       repeat_times: 3
     });
-    var range = calRange(new Date(2014, 2)); // FIXME this should go into march
+    var range = calRange(new Date(2014, 3));
     var events = recurrences(evt, range);
     assert.lengthOf(events, 1);
 
-    range = calRange(new Date(2014, 3));
+    range = calRange(new Date(2014, 4));
     events = recurrences(evt, range);
     assert.lengthOf(events, 0);
   });
