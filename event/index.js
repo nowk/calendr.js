@@ -219,14 +219,11 @@ EventDay.prototype.isLast = function() {
  */
 
 EventDay.prototype.placeOn = function(cal) {
-  var cm = parseDate(cal.moment).startOf("month");
-  var tm = parseDate(this.date, cm.zone()).startOf("month"); // must adjust to match calendr's timezone
-  if (!sameDate(cm, tm)) {
+  var day = cal.getDay(parseDate(this.date, cal.moment.zone()));
+  if ("undefined" === typeof day) {
     return;
   }
 
-  var i = this.date.date();
-  var day = cal.getDay(i);
   day.events.push(this);
 };
 

@@ -283,4 +283,21 @@ describe("recurrences", function() {
     assert.equal(events[2].starts.zone(), 420);
     assert.equal(events[3].starts.zone(), 420);
   });
+
+  it("returns recurrences in the outer months", function() {
+    var evt = new Event({
+      starts: new Date(2014, 0, 7),
+      ends: new Date(2014, 0, 7),
+      repeats: "weekly",
+      repeats_on: ["sunday", "saturday"]
+    });
+    var range = calRange(new Date(2014, 7));
+    var events = recurrences(evt, range);
+    assert.lengthOf(events, 12);
+
+    assert.equal(events[0].starts.month(), 6);
+    assert.equal(events[1].starts.month(), 7);
+    assert.equal(events[10].starts.month(), 7);
+    assert.equal(events[11].starts.month(), 8);
+  });
 });
