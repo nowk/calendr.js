@@ -2,14 +2,14 @@
 
 var assert = require('chai').assert;
 var sinon = require('sinon');
-var Calendr = require('..');
+var Grid = require('../grid');
 var Day = require("../day");
 
 
-describe("Calendr", function() {
+describe("Grid", function() {
   it("returns an array of the calendar month's weeks", function() {
     var april = new Date(2014, 03); // month is 0 indexed
-    var aprilcal = new Calendr(april);
+    var aprilcal = new Grid(april);
     assert.deepEqual(aprilcal.grid(), [
       [30,  31,  1,   2,   3,   4,   5],
       [6,   7,   8,   9,   10,  11,  12],
@@ -19,7 +19,7 @@ describe("Calendr", function() {
     ]);
 
     var may = new Date(2014, 04);
-    var maycal = new Calendr(may);
+    var maycal = new Grid(may);
     assert.deepEqual(maycal.grid(), [
       [27,  28,  29,  30,  1,   2,   3],
       [4,   5,   6,   7,   8,   9,   10],
@@ -31,7 +31,7 @@ describe("Calendr", function() {
 
   it("FIX it prepads the grid based on the 'date' provided", function() {
     var april = new Date(2014, 03, 5); // month is 0 indexed
-    var aprilcal = new Calendr(april);
+    var aprilcal = new Grid(april);
     assert.deepEqual(aprilcal.grid(), [
       [30,  31,  1,   2,   3,   4,   5],
       [6,   7,   8,   9,   10,  11,  12],
@@ -41,7 +41,7 @@ describe("Calendr", function() {
     ]);
 
     var may = new Date(2014, 04, 10);
-    var maycal = new Calendr(may);
+    var maycal = new Grid(may);
     assert.deepEqual(maycal.grid(), [
       [27,  28,  29,  30,  1,   2,   3],
       [4,   5,   6,   7,   8,   9,   10],
@@ -60,7 +60,7 @@ describe("Calendr", function() {
     var c = dayFactory(2014, 4);
 
     var april = new Date(2014, 3);
-    var aprilcal = new Calendr(april);
+    var aprilcal = new Grid(april);
 
     aprilcal.dayObjects = true;
 
@@ -76,16 +76,16 @@ describe("Calendr", function() {
   });
 
   it("returns the name of the current month", function() {
-    var aprilcal = new Calendr(new Date(2014, 3));
-    var maycal = new Calendr(new Date(2014, 4));
+    var aprilcal = new Grid(new Date(2014, 3));
+    var maycal = new Grid(new Date(2014, 4));
 
     assert.equal(aprilcal.monthName(), 'April');
     assert.equal(maycal.monthName(), 'May');
   });
 
   it("returns the name of previous/next months", function() {
-    var jancal = new Calendr(new Date(2014, 0));
-    var deccal = new Calendr(new Date(2014, 11));
+    var jancal = new Grid(new Date(2014, 0));
+    var deccal = new Grid(new Date(2014, 11));
 
     assert.equal(jancal.prevMonthName(), 'December');
     assert.equal(jancal.nextMonthName(), 'February');
@@ -94,7 +94,7 @@ describe("Calendr", function() {
   });
 
   it("returns the name of the month through an offset", function() {
-    var aprilcal = new Calendr(new Date(2014, 3));
+    var aprilcal = new Grid(new Date(2014, 3));
     var dec = aprilcal.monthName(-4);
     var jan = aprilcal.monthName(9);
 
@@ -104,7 +104,7 @@ describe("Calendr", function() {
 
   it("can move forward and backward by month", function() {
     var april = new Date(2014, 3);
-    var cal = new Calendr(april);
+    var cal = new Grid(april);
     assert.equal(cal.monthName(), 'April');
     assert.deepEqual(cal.grid(), [
       [30,  31,  1,   2,   3,   4,   5],
@@ -136,36 +136,36 @@ describe("Calendr", function() {
   });
 
   it("can auto grid", function() {
-    var s = sinon.mock(Calendr.prototype)
+    var s = sinon.mock(Grid.prototype)
       .expects('slice')
       .once()
       .returns([[1, 2, 3], [4, 5, 6]]);
 
     var may = new Date(2014, 04);
-    var maycal = new Calendr(may, {auto: true});
+    var maycal = new Grid(may, {auto: true});
 
     s.verify();
-    Calendr.prototype.slice.restore();
+    Grid.prototype.slice.restore();
   });
 
   it("caches the subsequent calls to grid", function() {
-    var s = sinon.mock(Calendr.prototype)
+    var s = sinon.mock(Grid.prototype)
       .expects('slice')
       .once()
       .returns([[1, 2, 3], [4, 5, 6]]);
 
     var may = new Date(2014, 04);
-    var maycal = new Calendr(may);
+    var maycal = new Grid(may);
     assert.deepEqual(maycal.grid(), [[1, 2, 3], [4, 5, 6]]);
     assert.deepEqual(maycal.grid(), [[1, 2, 3], [4, 5, 6]]);
 
     s.verify();
-    Calendr.prototype.slice.restore();
+    Grid.prototype.slice.restore();
   });
 
   it("it returns \"today\"", function() {
     var now = new Date();
-    var cal = new Calendr(now, {auto: true});
+    var cal = new Grid(now, {auto: true});
 
     var today = cal.getToday();
     assert.equal(today, now.getDate());

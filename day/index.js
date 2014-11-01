@@ -1,8 +1,8 @@
 /* jshint node: true */
 
-var parseDate = require("./utils").parseDate;
-var months = require("./utils").months;
-var days = require("./utils").days;
+var parseDate = require('../utils').parseDate;
+var months = require("../utils").months;
+var days = require("../utils").days;
 
 /**
  * expose

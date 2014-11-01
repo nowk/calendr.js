@@ -1,24 +1,40 @@
 /* jshint node: true */
 
 var assert = require("chai").assert;
-var recurrences = require("../recurrences");
 var Event = require("../event");
-var Calendr = require("..");
+var Grid = require("../grid");
+var recurrences = require("../recurrences");
 
 var calRange = function(date) {
-  var cal = new Calendr(date, {dayObjects: true});
+  var cal = new Grid(date, {dayObjects: true});
   return [].concat.apply([], cal.grid());
-}
+};
 
 describe("recurrences", function() {
-  it("returns 0 events if the event contains no recurrence", function() {
+  it("returns [itself] if the event contains no recurrence", function() {
     var evt = new Event({
       starts: new Date(2014, 0, 16),
       ends: new Date(2014, 0, 16)
     });
     var range = calRange(new Date(2014, 0));
     var events = recurrences(evt, range);
-    assert.lengthOf(events, 0);
+    assert.deepEqual(events, [evt]);
+  });
+
+  it("returned recurrences contain the same properties as original event", function() {
+    var evt = new Event({
+      title: "Hello World!",
+      starts: new Date(2014, 0, 16),
+      ends: new Date(2014, 0, 16),
+      repeats: "daily"
+    }, {
+      title: "title"
+    });
+    var range = calRange(new Date(2014, 0));
+    var events = recurrences(evt, range);
+    var e = events[0];
+    assert.equal(e.title, "Hello World!");
+    assert.equal(e.repeats, "daily");
   });
 
   it("returns daily recurrences till no end", function() {
@@ -144,11 +160,11 @@ describe("recurrences", function() {
       repeats: "monthly",
       repeat_times: 3
     });
-    var range = calRange(new Date(2014, 3));
+    var range = calRange(new Date(2014, 2)); // FIXME this should go into march
     var events = recurrences(evt, range);
     assert.lengthOf(events, 1);
 
-    range = calRange(new Date(2014, 4));
+    range = calRange(new Date(2014, 3));
     events = recurrences(evt, range);
     assert.lengthOf(events, 0);
   });
@@ -194,5 +210,77 @@ describe("recurrences", function() {
     range = calRange(new Date(2020, 0));
     events = recurrences(evt, range);
     assert.lengthOf(events, 0);
+  });
+
+  it("returns sets the dates tailored to the day of the recurrence", function() {
+    var evt = new Event({
+      starts: new Date(2014, 0, 16, 12, 30, 15),
+      ends: new Date(2014, 0, 18, 1, 10, 24),
+      repeats: "daily",
+      repeat_times: 5
+    });
+    var range = calRange(new Date(2014, 0));
+    var events = recurrences(evt, range);
+
+    var table = [
+      [new Date(2014, 0, 16, 12, 30, 15), new Date(2014, 0, 18, 1, 10, 24)],
+      [new Date(2014, 0, 17, 12, 30, 15), new Date(2014, 0, 19, 1, 10, 24)],
+      [new Date(2014, 0, 18, 12, 30, 15), new Date(2014, 0, 20, 1, 10, 24)]
+    ];
+    var i = 0;
+    var len = table.length;
+    for(; i < len; i++) {
+      var e = events[i];
+      assert.equal(e.starts.valueOf(), table[i][0].getTime());
+      assert.equal(e.ends.valueOf(), table[i][1].getTime());
+    }
+  });
+
+  it("Fix cloned events are not passing values to days", function() {
+    var evt = new Event({
+      starts: new Date(2014, 0, 16, 12, 30, 15),
+      ends: new Date(2014, 0, 18, 1, 10, 24),
+      repeats: "daily",
+      repeat_times: 5,
+      name: "Wat"
+    }, {
+      name: "name"
+    });
+    var range = calRange(new Date(2014, 0));
+    var events = recurrences(evt, range);
+    var e = events[0];
+
+    var days = e.days(); 
+    var i = 0;
+    var len = days.length;
+    for(; i < len; i++) {
+      var d = days[i];
+      // assert.equal(d.starts.valueOf(), evt.starts.valueOf());
+      assert.equal(d.repeats, "daily");
+      assert.equal(d.repeatTimes, 5);
+      assert.equal(d.name, "Wat");
+    }
+  });
+
+  it("cloned events maintain the timezone of the original event", function() {
+    var starts = "2014-10-22T16:00:00-07:00";
+    var ends   = "2014-10-22T16:00:00-07:00";
+
+    var evt = new Event({
+      starts: starts,
+      ends: ends,
+      repeats: "weekly",
+      repeats_on: ["sunday", "monday", "wednesday"],
+      repeat_times: 15,
+    }, {}, "-07:00");
+
+    var range = calRange(new Date(2014, 9));
+    var events = recurrences(evt, range);
+    assert.lengthOf(events, 4);
+
+    assert.equal(events[0].starts.zone(), 420);
+    assert.equal(events[1].starts.zone(), 420);
+    assert.equal(events[2].starts.zone(), 420);
+    assert.equal(events[3].starts.zone(), 420);
   });
 });

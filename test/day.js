@@ -44,4 +44,3 @@ describe("Day", function() {
     });
   });
 });
-

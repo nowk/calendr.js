@@ -1,7 +1,7 @@
 /* jshint node: true */
 
-var parseDate = require("./utils").parseDate;
-var days = require("./utils").days.map(function(v) {
+var parseDate = require("../utils").parseDate;
+var days = require("../utils").days.map(function(v) {
   return v.toLowerCase();
 });
 
@@ -22,7 +22,7 @@ module.exports = recurrences;
 
 var dayofWeekIndex = function(dayName) {
   return days.indexOf(dayName.toLowerCase());
-}
+};
 
 /**
  * condition is the conditional function for each recurrence type
@@ -37,7 +37,7 @@ var condition = {
     var daysInWeek = this.onDays().map(function(v) {
       return dayofWeekIndex(v);
     });
-    return d.valueOf() >= this.from() && ~daysInWeek.indexOf(d.day())
+    return d.valueOf() >= this.from() && ~daysInWeek.indexOf(d.day());
   },
   monthly: function(d) {
     var m = parseDate(this.from());
@@ -61,7 +61,7 @@ var condition = {
 function recurrences(event, range) {
   var recur = new Recur(event);
   if (!recur.yes()) {
-    return [];
+    return [event];
   }
 
   var type = recur.type();
@@ -79,6 +79,10 @@ function recurrences(event, range) {
   var cond = fn.bind(recur);
   for(; i < len; i++) {
     var d = parseDate(range[i].moment);
+
+    // adjust to the events timezone for comparison
+    d.zone(recur.tz());
+
     var date = d.valueOf();
     if (till && date > till) {
       break;
@@ -117,6 +121,17 @@ Recur.prototype.from = function() {
 };
 
 /**
+ * typesMap maps repeats values to moment add/subtract keys
+ */
+
+var typesMap = {
+  daily:   "days",
+  weekly:  "weeks",
+  monthly: "months",
+  yearly:  "years"
+};
+
+/**
  * till returns teh date at which the recurrence stops
  *
  * @param {Number} (date as int)
@@ -132,26 +147,14 @@ Recur.prototype.till = function() {
 
   var type = this.type();
   var n = this.event.repeatTimes;
+  var intv = typesMap[type];
   if (n > 0) {
     var s = parseDate(this.event.starts);
     s.startOf("day");
-    if ("daily" === type) {
-      s.add(n, "days");
-    }
-
     if ("weekly" === type) {
       s.startOf("week");
-      s.add(n, "weeks");
     }
-
-    if ("monthly" === type) {
-      s.add(n, "months");
-    }
-
-    if ("yearly" === type) {
-      s.add(n, "years");
-    }
-
+    s.add(n, intv);
     return s.valueOf();
   }
 };
@@ -191,6 +194,17 @@ Recur.prototype.yes = function() {
 };
 
 /**
+ * tz returns the timezone based on the event starts time
+ *
+ * @return {Number} timezone offset
+ * @api public
+ */
+
+Recur.prototype.tz = function() {
+  return this.event.starts.zone();
+};
+
+/**
  * Event provides a clnne of an event matched to the date of the recurrence
  *
  * @param {Event} event
@@ -201,6 +215,43 @@ Recur.prototype.yes = function() {
 
 function Event(event, date) {
   this.event = event; 
+
+  var keys = Object.keys(this.event);
+  var self = this;
+  var i = 0;
+  var len = keys.length;
+  for(; i < len; i++) {
+    var k = keys[i];
+    Object.defineProperty(self, k, {
+      value: event[k],
+      enumerable: true,
+      writable: true
+    });
+  }
+
+  var n = recurOffset(event.starts, date);
+  var tz = this.tz;
+
+  this.starts = parseDate(event.starts.valueOf() + n, tz);
+  this.ends = parseDate(event.ends.valueOf() + n, tz);
+}
+
+/**
+ * recurOffset returns the offset value of the original event from the current
+ *
+ * @param {Moment} a
+ * @param {Moment} b
+ * @return {Number}
+ * @api private
+ */
+
+function recurOffset(a, b) {
+  var n = parseDate(a);
+  n.startOf("day");
+  var m = parseDate(b);
+  m.startOf("day");
+
+  return m.valueOf() - n.valueOf();
 }
 
 /**

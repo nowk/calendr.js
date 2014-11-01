@@ -1,7 +1,9 @@
 
-build:
-	@./node_modules/.bin/grunt \
-		build
+browserify:
+	browserify -r ./index.js > bundle.js
+
+build: browserify
+	uglifyjs -o calendrjs.min.js bundle.js
 
 test:
 	@NODE_ENV=test ./node_modules/.bin/mocha \

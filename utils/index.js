@@ -1,6 +1,6 @@
 /* jshint node: true */
 
-var moment = require("moment");
+var  moment = require("moment");
 
 /**
  * days in english
@@ -35,19 +35,24 @@ exports.months = [
   'December'
 ];
 
-
 /**
  * parseDate converts to Date
  *
- * @param {String|Number|Date} v
+ * @param {String|Number|Date|Moment} v
+ * @param {String|Number} tz
  * @return {Moment}
  * @api private
  */
 
-exports.parseDate = function(v) {
+exports.parseDate = function(v, tz) {
   if (!!!v) {
     return;
   }
 
-  return moment(v);
-}
+  var m = moment(v);
+  if ("undefined" !== typeof tz) {
+    m.zone(tz);
+  }
+
+  return m;
+};

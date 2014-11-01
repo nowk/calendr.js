@@ -6,15 +6,15 @@ var assert = require('chai').assert;
  * event factory
  *
  * @param {String} name
- * @param {Date} startson
+ * @param {Date} starts
  * @param {Object} opts
  * @return {Object}
  */
 
-exports.eventFactory = function(name, startson, opts) {
+exports.eventFactory = function(name, starts, opts) {
   var event = {
     name: name,
-    startson: startson
+    starts: starts
   };
 
   for(var k in opts) {
@@ -65,5 +65,4 @@ exports.range = function(start, end, includeEnd) {
 
   return arr;
 };
-
 

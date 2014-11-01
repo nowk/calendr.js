@@ -1,6 +1,7 @@
 /* jshint node: true */
 
-var parseDate = require("./utils").parseDate;
+var extend = require("node.extend");
+var parseDate = require("../utils").parseDate;
 
 /**
  * expose Event
@@ -13,39 +14,14 @@ module.exports = Event;
  */
 
 var defaultConfig = {
-  id:           "id",
-  name:         "name",
-  description:  "description",
   starts:       "starts",
   ends:         "ends",
   repeats:      "repeats",
   repeatsOn:    "repeats_on",
   repeatEndsOn: "repeat_ends_on",
   repeatTimes:  "repeat_times"
-}
+};
 
-/**
- * extend extends the config object with any missing properties from 
- * defaultConfig
- *
- * @param {Object} orig
- * @return {Object}
- * @api private
- */
-
-function extend(config) {
-  var keys = Object.keys(defaultConfig);
-  var copy = {};
-  var i = 1;
-  var len = keys.length;
-  for(; i < len; i++) {
-    var k = keys[i];
-    var v = config[k];
-    copy[k] = !!v ? v : defaultConfig[k];
-  }
-
-  return copy;
-}
 
 /**
  * assign assigns properties from data based on config
@@ -57,7 +33,7 @@ function extend(config) {
 
 function assign(obj, config) {
   var self = this;
-  var conf = !!config ? extend(config) : defaultConfig;
+  var conf = extend({}, defaultConfig, config);
   var keys = Object.keys(conf);
   var i = 0;
   var len = keys.length;
@@ -75,19 +51,23 @@ function assign(obj, config) {
 *
 * @param {Object} obj (should be plain old object, like a JSON parse)
 * @param {Object} config
+* @param {String|Number} tz
 * @constructor
 * @api public
 */
 
-function Event(obj, config) {
+function Event(obj, config, tz) {
   assign.call(this, (obj || {}), config);
 
-  this.starts = parseDate(this.starts);
-  this.ends = parseDate(this.ends);
-  this.repeatEndsOn = parseDate(this.repeatEndsOn);
+  this.starts = parseDate(this.starts, tz);  
+  this.ends = parseDate(this.ends, tz);
+  this.repeatEndsOn = parseDate(this.repeatEndsOn, tz);
+
   if (!!!this.starts || !!!this.ends) {
     throw new Error("must have a starts and ends date") ;
   }
+
+  this.tz = this.starts.zone();
 }
 
 /**
@@ -135,7 +115,7 @@ Event.prototype.placeOn = function(cal) {
     var d = days[i];
     d.placeOn(cal);
   }
-}
+};
 
 /**
  * EventDay is a struct in which Event is cloned onto
@@ -153,13 +133,83 @@ function EventDay(event, i) {
   this.i = i || 0;
 
   var date = this.date = parseDate(this.event.starts);
-  date.startOf("day");
   date.add(this.i, "days");
 
-  assign.call(this, event, defaultConfig);
-  this.starts = starts.call(this);
-  this.ends = ends.call(this);
-};
+  var self = this;
+  var keys = Object.keys(this.event);
+  var n = 0;
+  var len = keys.length;
+  for(; n < len; n++) {
+    var k = keys[n];
+    Object.defineProperty(self, k, {
+      value: event[k],
+      enumerable: true,
+      writable: true
+    });
+  }
+
+  this.starts = parseDate(this.starts);
+  this.ends = parseDate(this.ends);
+  adjustDates.call(this);
+}
+
+/**
+ * adjustDates adjusts the EventDay start dates based on it's location in the
+ * span
+ *
+ * @api private
+ */
+
+function adjustDates() {
+  var f = this.isFirst();
+  var l = this.isLast();
+  if (f && l) {
+    return;
+  }
+
+  if (f) {
+    this.ends = parseDate(this.starts);
+    this.ends.endOf("day");
+    return;
+  }
+
+  if (l) {
+    this.starts = parseDate(this.ends);
+    this.starts.startOf("day");
+    return;
+  }
+
+  if (!f || !l) {
+    this.starts = parseDate(this.date);
+    this.ends = parseDate(this.date);
+    this.starts.startOf("day");
+    this.ends.endOf("day");
+  }
+}
+
+/**
+ * isFirst returns true if the EventDay is the first day in the span
+ *
+ * @return {Bool}
+ * @api public
+ */
+
+EventDay.prototype.isFirst = function() {
+  return this.i === 0;
+}
+
+/**
+ * isLast returns true if the EventDay is the last in the span
+ *
+ * @return {Bool}
+ * @api public
+ */
+
+EventDay.prototype.isLast = function() {
+  var d = this.event.duration();
+  var len = d.length();
+  return this.i === len - 1;
+}
 
 /**
  * placeOn places the EventDay on the calender
@@ -170,7 +220,7 @@ function EventDay(event, i) {
 
 EventDay.prototype.placeOn = function(cal) {
   var cm = parseDate(cal.moment).startOf("month");
-  var tm = parseDate(this.date).startOf("month");
+  var tm = parseDate(this.date, cm.zone()).startOf("month"); // must adjust to match calendr's timezone
   if (!sameDate(cm, tm)) {
     return;
   }
@@ -179,44 +229,6 @@ EventDay.prototype.placeOn = function(cal) {
   var day = cal.getDay(i);
   day.events.push(this);
 };
-
-/**
- * start returns the start date of the event for the given day
- * 
- * @return {Moment}
- * @api private
- */
-
-function starts() {
-  var starts = parseDate(this.event.starts);
-  starts.startOf("day");
-  if (sameDate(this.date, starts)) {
-    return this.event.starts;
-  }
-
-  var sod = parseDate(this.date);
-  sod.startOf("day");
-  return sod;
-}
-
-/**
- * ends returns the end date of the event for the given day
- * 
- * @return {Moment}
- * @api private
- */
-
-function ends() {
-  var ends = parseDate(this.event.ends);
-  ends.startOf("day");
-  if (sameDate(this.date, ends)) {
-    return this.event.ends;
-  }
-
-  var eod = parseDate(this.date);
-  eod.endOf("day");
-  return eod;
-}
 
 /**
  * sameDate compares a pair of dates by their int representations

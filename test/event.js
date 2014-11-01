@@ -2,9 +2,15 @@
 
 var t = require("./test_helper");
 var assert = require("chai").assert;
-var Calendr = require("..");
-var Event = require("../event");
+var Grid = require("../grid");
 var Day = require("../day");
+var recurrences = require("../recurrences");
+var Event = require("../event");
+
+var calRange = function(date) {
+  var cal = new Grid(date, {dayObjects: true});
+  return [].concat.apply([], cal.grid());
+};
 
 describe('Event', function() {
   it("returns the length of an event", function() {
@@ -25,6 +31,21 @@ describe('Event', function() {
     d = evt.duration();
     
     assert.equal(d.length(), 1);
+  });
+
+  it("can assign extra properties", function() {
+    var evt = new Event({
+      starts: new Date(2014, 0, 1, 0, 30, 55),
+      ends: new Date(2014, 0, 1, 20, 12, 25),
+      title: "Foo",
+      description: "Hello World!"
+    }, {
+      title: "title",
+      description: "description"
+    });
+    
+    assert.equal(evt.title, "Foo");
+    assert.equal(evt.description, "Hello World!");
   });
 
   it("throws if there is no start time", function() {
@@ -65,6 +86,8 @@ describe('Event', function() {
       name: "Awesome Event",
       starts: new Date(2014, 0, 1, 0, 30, 55),
       ends: new Date(2014, 0, 4, 14, 10, 21),
+    }, {
+      name: "name"
     });
 
     var days = evt.days();
@@ -95,22 +118,82 @@ describe('Event', function() {
       ends: new Date(2014, 0, 4, 14, 10, 21),
     });
 
-    var cal = new Calendr(new Date(2014, 0, 1), {dayObjects: true});
+    var cal = new Grid(new Date(2014, 0, 1), {dayObjects: true});
     evt.placeOn(cal);
     t.assertEvents(cal, t.range(1, 4, true), 1);
     t.assertEvents(cal, t.range(5, 31, true), 0);
 
-    cal = new Calendr(new Date(2014, 1, 1), {dayObjects: true});
+    cal = new Grid(new Date(2014, 1, 1), {dayObjects: true});
     evt.placeOn(cal);
     t.assertEvents(cal, t.range(1, 28, true), 0);
   });
+
+  it("FIX when timezone is forced comparison against calendr days is off by the timezone", function() {
+    var starts = "2014-10-08T19:00:00-07:00";
+    var ends = "2014-10-10T09:00:00-07:00";
+    var evt = new Event({
+      starts: starts,
+      ends: ends
+    }, {}, "-07:00");
+
+    var cal = new Grid(new Date(2014, 9), {dayObjects: true});
+    evt.placeOn(cal);
+    t.assertEvents(cal, t.range(8, 10, true), 1);
+  })
+
+  it("forces the dates to a timezone", function() {
+    var tz = new Date().getTimezoneOffset();
+    var starts = "2014-10-22T16:00:00-07:00";
+    var evt = new Event({
+      starts: starts,
+      ends: starts,
+      repeat_ends_on: starts
+    });
+    assert.equal(evt.starts.zone(), tz);
+    assert.equal(evt.ends.zone(), tz);
+    assert.equal(evt.repeatEndsOn.zone(), tz);
+
+    evt = new Event({
+      starts: starts,
+      ends: starts,
+      repeat_ends_on: starts
+    }, {}, "-07:00");
+    assert.equal(evt.starts.zone(), 420);
+    assert.equal(evt.ends.zone(), 420);
+    assert.equal(evt.repeatEndsOn.zone(), 420);
+  });
+
+  it("FIX events cloned during recurrence does not adjust proper starts/ends", function() {
+    var starts = "2014-10-22T16:00:00-07:00";
+    var ends   = "2014-10-22T03:00:00-07:00";
+
+    var evt = new Event({
+      starts: starts,
+      ends: ends,
+      repeats: "weekly",
+      repeats_on: ["sunday", "monday", "wednesday"],
+      repeat_times: 15,
+    }, {}, "-07:00");
+
+    var range = calRange(new Date(2014, 9));
+    var events = recurrences(evt, range);
+    assert.lengthOf(events, 4);
+
+    var table = [
+      {s: new Date(2014, 9, 22, 19, 0, 0), e: new Date(2014, 9, 22, 06, 0, 0)},
+      {s: new Date(2014, 9, 26, 19, 0, 0), e: new Date(2014, 9, 26, 06, 0, 0)},
+      {s: new Date(2014, 9, 27, 19, 0, 0), e: new Date(2014, 9, 27, 06, 0, 0)},
+      {s: new Date(2014, 9, 29, 19, 0, 0), e: new Date(2014, 9, 29, 06, 0, 0)},
+    ];
+    var i = 0;
+    var len = table.length;
+    for(; i < len; i++) {
+      var v = table[i];
+      var e = events[i];
+      var d = e.days();
+      assert.lengthOf(d, 1);
+      assert.equal(d[0].starts.valueOf(), v.s.getTime());
+      assert.equal(d[0].ends.valueOf(), v.e.getTime());
+    }
+  });
 });
-
-// var cal = new Calendr(2014, 0);
-// var []events = evt.apply(cal);
-
-// for _, v := range []events {
-//   for _, d := v.days {
-//     // look up day in cal and append
-//   } 
-// }
