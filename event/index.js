@@ -277,7 +277,13 @@ Duration.prototype.length = function() {
   var a = this.starts;
   var b = this.ends;
   a.hours(0);
+  a.minutes(0);
+  a.seconds(0);
+  a.milliseconds(0);
   b.hours(0);
+  b.minutes(0);
+  b.seconds(0);
+  b.milliseconds(0);
 
   var offset = 1; // always offset by 1 to account for the day of
   return Math.ceil((b.valueOf() - a.valueOf()) / ms_in_day) + offset; 

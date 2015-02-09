@@ -196,4 +196,18 @@ describe('Event', function() {
       assert.equal(d[0].ends.valueOf(), v.e.getTime());
     }
   });
+
+  it("FIX event spans 2 days when it should only span 1 due to minutes not be " +
+    "zeroed", function() {
+
+    var starts = "2015-02-04T22:00:00-08:00";
+    var ends = "2015-02-04T23:45:00-08:00";
+
+    var evt = new Event({
+      starts: starts,
+      ends:   ends
+    }, {}, "-08:00");
+
+    assert.lengthOf(evt.days(), 1);
+  });
 });
