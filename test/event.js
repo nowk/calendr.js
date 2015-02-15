@@ -210,4 +210,20 @@ describe('Event', function() {
 
     assert.lengthOf(evt.days(), 1);
   });
+
+  it("FIX DST causes days to be off by 1", function() {
+    var starts = "2015-03-09T13:00:00-04:00";
+    var ends = "2015-03-09T18:00:00-04:00";
+
+    var evt = new Event({
+      starts: starts,
+      ends:   ends,
+    }, {}, "-04:00");
+
+    var cal = new Grid(new Date(2015, 2), {dayObjects: true});
+    evt.placeOn(cal);
+    t.assertEvents(cal, t.range(1, 8, true), 0);
+    t.assertEvents(cal, t.range(9, 9, true), 1);
+    t.assertEvents(cal, t.range(10, 31, true), 0);
+  });
 });

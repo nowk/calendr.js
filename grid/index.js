@@ -233,10 +233,17 @@ function findByDate(date) {
     var nlen = week.length;
     for(; n < nlen; n++) {
       var day = week[n];
+      var off = day.moment.toDate().getTimezoneOffset();
+      if (tz !== off) {
+        tz = off;
+      }
+
       var f = parseDate(day.moment, tz);
       f.startOf("day");
-      if (f.valueOf() === vof) {
-      // console.log(f.toDate(), d.toDate());
+      if (f.year() === d.year() && 
+          f.month() === d.month() && 
+          f.date() === d.date()) {
+
         return day;
       }
     }
