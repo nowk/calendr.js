@@ -149,18 +149,18 @@ describe('Event', function() {
       ends: starts,
       repeat_ends_on: starts
     });
-    assert.equal(evt.starts.zone(), tz);
-    assert.equal(evt.ends.zone(), tz);
-    assert.equal(evt.repeatEndsOn.zone(), tz);
+    assert.equal(evt.starts.utcOffset(), tz);
+    assert.equal(evt.ends.utcOffset(), tz);
+    assert.equal(evt.repeatEndsOn.utcOffset(), tz);
 
     evt = new Event({
       starts: starts,
       ends: starts,
       repeat_ends_on: starts
     }, {}, "-07:00");
-    assert.equal(evt.starts.zone(), 420);
-    assert.equal(evt.ends.zone(), 420);
-    assert.equal(evt.repeatEndsOn.zone(), 420);
+    assert.equal(evt.starts.utcOffset(), 420);
+    assert.equal(evt.ends.utcOffset(), 420);
+    assert.equal(evt.repeatEndsOn.utcOffset(), 420);
   });
 
   it("FIX events cloned during recurrence does not adjust proper starts/ends", function() {

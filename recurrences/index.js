@@ -199,7 +199,7 @@ Recur.prototype.yes = function() {
  */
 
 Recur.prototype.tz = function() {
-  return this.event.starts.zone();
+  return this.event.starts.utcOffset();
 };
 
 /**

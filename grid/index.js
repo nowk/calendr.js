@@ -221,7 +221,7 @@ function findByDate(date) {
   var d = parseDate(date);
   d.startOf("day");
   var vof = d.valueOf();
-  var tz = d.zone();
+  var tz = d.utcOffset();
 
   var self = this;
   var weeks = this.grid();

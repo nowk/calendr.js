@@ -221,7 +221,8 @@ EventDay.prototype.isLast = function() {
  */
 
 EventDay.prototype.placeOn = function(cal) {
-  var day = cal.getDay(parseDate(this.date, cal.moment.zone()));
+  // var day = cal.getDay(parseDate(this.date, cal.moment.utcOffset()));
+  var day = cal.getDay(this.date);
   if ("undefined" === typeof day) {
     return;
   }

@@ -51,7 +51,7 @@ exports.parseDate = function(v, tz) {
 
   var m = moment(v);
   if ("undefined" !== typeof tz) {
-    m.zone(tz);
+    m.utcOffset(tz);
   }
 
   return m;

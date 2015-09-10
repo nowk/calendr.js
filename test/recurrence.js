@@ -278,10 +278,10 @@ describe("recurrences", function() {
     var events = recurrences(evt, range);
     assert.lengthOf(events, 4);
 
-    assert.equal(events[0].starts.zone(), 420);
-    assert.equal(events[1].starts.zone(), 420);
-    assert.equal(events[2].starts.zone(), 420);
-    assert.equal(events[3].starts.zone(), 420);
+    assert.equal(events[0].starts.utcOffset(), 420);
+    assert.equal(events[1].starts.utcOffset(), 420);
+    assert.equal(events[2].starts.utcOffset(), 420);
+    assert.equal(events[3].starts.utcOffset(), 420);
   });
 
   it("returns recurrences in the outer months", function() {
