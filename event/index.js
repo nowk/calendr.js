@@ -70,6 +70,14 @@ function Event(obj, config, tz) {
   if (!!!this.starts || !!!this.ends) {
     throw new Error("must have a starts and ends date") ;
   }
+
+  // parse in original dates if available
+  if (!!this.orig_starts) {
+    this.orig_starts = parseDate(this.orig_starts, tz);
+  }
+  if (!!this.orig_ends) {
+    this.orig_ends = parseDate(this.orig_ends, tz);
+  }
 }
 
 /**
